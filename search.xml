@@ -3,7 +3,7 @@
   <entry>
     <title>openstack train 安装环境准备</title>
     <url>/2021/01/26/openstack-train-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/</url>
-    <content><![CDATA[<h1 id="服务器规划"><a href="#服务器规划" class="headerlink" title="服务器规划"></a>服务器规划</h1><p>本次测试环境采用3台DELL物理机进行安装部署，管理vlan 33,业务vlan 11,服务器业务网卡不配置ip地址,采用provider vlan网络(通俗来讲就是网关在物理设备上面)  </p>
+    <content><![CDATA[<h1 id="服务器规划"><a href="#服务器规划" class="headerlink" title="服务器规划"></a>服务器规划</h1><p>​    本次测试环境采用3台DELL物理机进行安装部署，管理vlan 33,业务vlan 11,服务器业务网卡不配置ip地址,采用provider vlan网络(通俗来讲就是网关在物理设备上面)  </p>
 <a id="more"></a>  
 
 <table>
@@ -61,38 +61,94 @@
 <li><p>控制节点修改配置，本文只有允许两个网段可以同步时间</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt;/etc/chrony.conf &lt;&lt;eof</span><br><span class="line">server ntp1.aliyun.com  iburst</span><br><span class="line">driftfile /var/lib/chrony/drift</span><br><span class="line">makestep 1.0 3</span><br><span class="line">rtcsync</span><br><span class="line">allow 10.14.32.0/24</span><br><span class="line">allow 10.14.11.0/24</span><br><span class="line">eof</span><br></pre></td></tr></table></figure></li>
 <li><p>控制节点启动chronyd 服务</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl start chronyd</span><br></pre></td></tr></table></figure>
-<p> 验证同步结果  </p>
- <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chronyc sources -v</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<pre><code>
-</code></pre>
-</li>
-</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl start chronyd </span><br></pre></td></tr></table></figure>
+<p>验证同步结果 </p>
+ <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chronyc sources -v</span><br></pre></td></tr></table></figure>
 <p><img src="/images/openstack-train-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/image-20210129151301718.png" alt="image-20210129151301718"></p>
-<ol start="4">
+</li>
 <li><p>计算节点配置chrony服务</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt;/etc/chrony.conf&lt;&lt;eof</span><br><span class="line">server 10.14.32.11</span><br><span class="line">driftfile /var/lib/chrony/drift</span><br><span class="line">makestep 1.0 3</span><br><span class="line">rtcsync</span><br><span class="line">logdir /var/log/chrony</span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
 <p>计算节点启动chronyd服务并验证</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl start chronyd &amp;&amp; systemctl enable chronyd</span><br></pre></td></tr></table></figure>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chronyc sources -v</span><br></pre></td></tr></table></figure>
 <p><img src="/images/openstack-train-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/image-20210129152910069.png" alt="image-20210129152910069"></p>
+</li>
+</ol>
 <h1 id="配置主机hosts"><a href="#配置主机hosts" class="headerlink" title="配置主机hosts"></a>配置主机hosts</h1><p>所有节点都要配置主机hosts文件</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt;/etc/hosts&lt;&lt;eof</span><br><span class="line">10.14.32.11 controller</span><br><span class="line">10.14.32.11 bjyz-10-14-32-11</span><br><span class="line">10.14.32.12 bjyz-10-14-32-12</span><br><span class="line">10.14.32.13 bjyz-10-14-32-13</span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
-
-
-
-
 <h1 id="配置主机互信"><a href="#配置主机互信" class="headerlink" title="配置主机互信"></a>配置主机互信</h1><p>控制节点到计算节点免密登录,全部默认即可</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
 <p>拷贝公钥到计算节点</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">for i in `seq 11 13`;do ssh-copy-id -i .ssh/id_rsa.pub 10.14.32.$i;done</span><br></pre></td></tr></table></figure>
+<h1 id="配置openstack-yum-源"><a href="#配置openstack-yum-源" class="headerlink" title="配置openstack yum 源"></a>配置openstack yum 源</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"> cat &gt;&gt;/etc/yum.repos.d/openstack.repo&lt;&lt;eof</span><br><span class="line">[openstack]</span><br><span class="line">name=openstack</span><br><span class="line">baseurl=https://mirrors.aliyun.com/centos/7/cloud/x86_64/openstack-train</span><br><span class="line">gpgcheck=0</span><br><span class="line">enabled=1</span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum clean all</span><br><span class="line">yum makecache</span><br></pre></td></tr></table></figure>
 
 
+<pre><code># 安装数据库
+</code></pre>
+<ol>
+<li>安装软件包</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum install mariadb mariadb-server python2-PyMySQL -y</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>修改mariadb配置文件</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt;/etc/my.cnf&lt;&lt;eof</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash"><span class="comment"># This group is read both both by the client and the server</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> use it <span class="keyword">for</span> options that affect everything</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash">[client-server]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash"><span class="comment"># This group is read by the server</span></span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash">[mysqld]</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Disabling symbolic-links is recommended to prevent assorted security risks</span></span><br><span class="line">symbolic-links=0</span><br><span class="line">basedir=/Data/servers/mysql</span><br><span class="line">datadir=/Data/servers/mysql</span><br><span class="line">socket=/Data/servers/mysql/mysql.sock</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash"><span class="comment"># include all files from the config directory</span></span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash">!includedir /etc/my.cnf.d</span></span><br><span class="line">[client]</span><br><span class="line">socket=/Data/servers/mysql/mysql.sock</span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
 
 
-<p>​    </p>
+<ol start="3">
+<li>增加MySQL openstack独立配置文件</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"> cat &gt;&gt;/etc/my.cnf.d/openstack.cnf&lt;&lt;eof</span><br><span class="line">[mysqld]</span><br><span class="line">basedir=/Data/servers/mysql</span><br><span class="line">datadir=/Data/servers/mysql</span><br><span class="line">socket=/Data/servers/mysql/mysql.sock</span><br><span class="line">bind-address = 10.14.32.11</span><br><span class="line">default-storage-engine = innodb</span><br><span class="line">innodb_file_per_table = on</span><br><span class="line">max_connections = 4096</span><br><span class="line">collation-server = utf8_general_ci</span><br><span class="line">character-set-server = utf8</span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>启动mariadb及配置开机自启动</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl start mariadb &amp;&amp; systemctl enable mariadb</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li><p>进行mariadb安全设置,优化mariadb最大连接</p>
+<p>改mariadb.service文件</p>
 </li>
 </ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt;/usr/lib/systemd/system/mariadb.service&lt;&lt;eof</span><br><span class="line">LimitNOFILE=655350</span><br><span class="line">LimitNPROC=655350</span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
+<p>​        重新加载系统服务，并重启mariadb</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl --system daemon-reload</span><br><span class="line">systemctl restart mariadb.service</span><br></pre></td></tr></table></figure>
+<h1 id="安装并配置消息队列"><a href="#安装并配置消息队列" class="headerlink" title="安装并配置消息队列"></a>安装并配置消息队列</h1><ol>
+<li>安装并启动rabbitmq</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum install rabbitmq-server -y</span><br><span class="line">systemctl start rabbitmq-server &amp;&amp; systemctl enable rabbitmq-server</span><br><span class="line">rabbitmqctl add_user openstack RABBIT_PASS</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>在rabbitmq里添加openstack账户</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">rabbitmqctl set_user_tags openstack administrator</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>查看指定用户权限信息</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">rabbitmqctl  list_user_permissions openstack</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>给openstack用户配置写和读权限</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">rabbitmqctl set_permissions openstack &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>启用rabbitmq web界面</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">rabbitmq-plugins enable rabbitmq_management</span><br></pre></td></tr></table></figure>
+<p>访问<a href="http://10.14.32.11:15672/">http://10.14.32.11:15672/</a></p>
+<p><img src="/images/openstack-train-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/image-20210129164701856.png" alt="image-20210129164701856"></p>
+<p>Rabbitmq默认的配置很低。所以需要优化五个参数：分别是：File descriptors、Socket descriptors、Erlang </p>
+<p>vim /etc/security/limits.conf</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root            soft    core            1000</span><br><span class="line">root            hard    core            unlimited</span><br><span class="line">root            soft    nofile          655350</span><br><span class="line">root            hard    nofile          655350</span><br><span class="line">root            soft    nproc           655350</span><br><span class="line">root            hard    nproc           655350</span><br><span class="line">root            soft    memlock         unlimited</span><br><span class="line">root            hard    memlock         unlimited</span><br><span class="line">root            soft    stack           unlimited</span><br><span class="line">root            hard    stack           unlimited</span><br><span class="line">root            soft    sigpending      1024000</span><br><span class="line">root            hard    sigpending      1024000</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>重启rabbitmq</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">rabbitmqctl stop</span><br><span class="line">rabbitmq-server -detached</span><br></pre></td></tr></table></figure>
+<h1 id="安装memcached缓存密码使用"><a href="#安装memcached缓存密码使用" class="headerlink" title="安装memcached缓存密码使用"></a>安装memcached缓存密码使用</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install memcached python-memcached -y</span><br></pre></td></tr></table></figure>
+<p>修改memcached监听地址</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt;/etc/sysconfig/memcached&lt;&lt;eof</span><br><span class="line">PORT=&quot;11211&quot;</span><br><span class="line">USER=&quot;memcached&quot;</span><br><span class="line">MAXCONN=&quot;1024&quot;</span><br><span class="line">CACHESIZE=&quot;64&quot;</span><br><span class="line">OPTIONS=&quot;-l 127.0.0.1,::1,controller&quot;</span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
+<p>启动服务：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl start memcached &amp;&amp; systemctl enable memcached</span><br></pre></td></tr></table></figure>
+
+
+<p>至此基本环境已经安装完毕。</p>
 ]]></content>
       <categories>
         <category>openstack</category>

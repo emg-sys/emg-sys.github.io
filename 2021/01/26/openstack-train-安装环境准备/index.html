@@ -21,17 +21,18 @@
     var CONFIG = {"hostname":"emg-sys.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="服务器规划本次测试环境采用3台DELL物理机进行安装部署，管理vlan 33,业务vlan 11,服务器业务网卡不配置ip地址,采用provider vlan网络(通俗来讲就是网关在物理设备上面)">
+  <meta name="description" content="服务器规划​    本次测试环境采用3台DELL物理机进行安装部署，管理vlan 33,业务vlan 11,服务器业务网卡不配置ip地址,采用provider vlan网络(通俗来讲就是网关在物理设备上面)">
 <meta property="og:type" content="article">
 <meta property="og:title" content="openstack train 安装环境准备">
 <meta property="og:url" content="http://emg-sys.github.io/2021/01/26/openstack-train-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/index.html">
 <meta property="og:site_name" content="流星雨的博客">
-<meta property="og:description" content="服务器规划本次测试环境采用3台DELL物理机进行安装部署，管理vlan 33,业务vlan 11,服务器业务网卡不配置ip地址,采用provider vlan网络(通俗来讲就是网关在物理设备上面)">
+<meta property="og:description" content="服务器规划​    本次测试环境采用3台DELL物理机进行安装部署，管理vlan 33,业务vlan 11,服务器业务网卡不配置ip地址,采用provider vlan网络(通俗来讲就是网关在物理设备上面)">
 <meta property="og:locale">
 <meta property="og:image" content="http://emg-sys.github.io/images/openstack-train-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/image-20210129151301718.png">
 <meta property="og:image" content="http://emg-sys.github.io/images/openstack-train-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/image-20210129152910069.png">
+<meta property="og:image" content="http://emg-sys.github.io/images/openstack-train-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/image-20210129164701856.png">
 <meta property="article:published_time" content="2021-01-26T08:36:03.000Z">
-<meta property="article:modified_time" content="2021-01-29T08:07:09.945Z">
+<meta property="article:modified_time" content="2021-01-29T09:14:42.402Z">
 <meta property="article:author" content="James">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://emg-sys.github.io/images/openstack-train-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/image-20210129151301718.png">
@@ -241,7 +242,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-01-29 16:07:09" itemprop="dateModified" datetime="2021-01-29T16:07:09+08:00">2021-01-29</time>
+                <time title="修改时间：2021-01-29 17:14:42" itemprop="dateModified" datetime="2021-01-29T17:14:42+08:00">2021-01-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -266,14 +267,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.3k</span>
+              <span>3.9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>4 分钟</span>
             </span>
 
         </div>
@@ -285,7 +286,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="服务器规划"><a href="#服务器规划" class="headerlink" title="服务器规划"></a>服务器规划</h1><p>本次测试环境采用3台DELL物理机进行安装部署，管理vlan 33,业务vlan 11,服务器业务网卡不配置ip地址,采用provider vlan网络(通俗来讲就是网关在物理设备上面)  </p>
+        <h1 id="服务器规划"><a href="#服务器规划" class="headerlink" title="服务器规划"></a>服务器规划</h1><p>​    本次测试环境采用3台DELL物理机进行安装部署，管理vlan 33,业务vlan 11,服务器业务网卡不配置ip地址,采用provider vlan网络(通俗来讲就是网关在物理设备上面)  </p>
 <a id="more"></a>  
 
 <table>
@@ -343,38 +344,94 @@
 <li><p>控制节点修改配置，本文只有允许两个网段可以同步时间</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt;/etc/chrony.conf &lt;&lt;eof</span><br><span class="line">server ntp1.aliyun.com  iburst</span><br><span class="line">driftfile /var/lib/chrony/drift</span><br><span class="line">makestep 1.0 3</span><br><span class="line">rtcsync</span><br><span class="line">allow 10.14.32.0/24</span><br><span class="line">allow 10.14.11.0/24</span><br><span class="line">eof</span><br></pre></td></tr></table></figure></li>
 <li><p>控制节点启动chronyd 服务</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start chronyd</span><br></pre></td></tr></table></figure>
-<p> 验证同步结果  </p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chronyc sources -v</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<pre><code>
-</code></pre>
-</li>
-</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start chronyd </span><br></pre></td></tr></table></figure>
+<p>验证同步结果 </p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chronyc sources -v</span><br></pre></td></tr></table></figure>
 <p><img src="/images/openstack-train-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/image-20210129151301718.png" alt="image-20210129151301718"></p>
-<ol start="4">
+</li>
 <li><p>计算节点配置chrony服务</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt;/etc/chrony.conf&lt;&lt;eof</span><br><span class="line">server 10.14.32.11</span><br><span class="line">driftfile /var/lib/chrony/drift</span><br><span class="line">makestep 1.0 3</span><br><span class="line">rtcsync</span><br><span class="line">logdir /var/log/chrony</span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
 <p>计算节点启动chronyd服务并验证</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start chronyd &amp;&amp; systemctl enable chronyd</span><br></pre></td></tr></table></figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chronyc sources -v</span><br></pre></td></tr></table></figure>
 <p><img src="/images/openstack-train-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/image-20210129152910069.png" alt="image-20210129152910069"></p>
+</li>
+</ol>
 <h1 id="配置主机hosts"><a href="#配置主机hosts" class="headerlink" title="配置主机hosts"></a>配置主机hosts</h1><p>所有节点都要配置主机hosts文件</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt;/etc/hosts&lt;&lt;eof</span><br><span class="line">10.14.32.11 controller</span><br><span class="line">10.14.32.11 bjyz-10-14-32-11</span><br><span class="line">10.14.32.12 bjyz-10-14-32-12</span><br><span class="line">10.14.32.13 bjyz-10-14-32-13</span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
-
-
-
-
 <h1 id="配置主机互信"><a href="#配置主机互信" class="headerlink" title="配置主机互信"></a>配置主机互信</h1><p>控制节点到计算节点免密登录,全部默认即可</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
 <p>拷贝公钥到计算节点</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for i in `seq 11 13`;do ssh-copy-id -i .ssh/id_rsa.pub 10.14.32.$i;done</span><br></pre></td></tr></table></figure>
+<h1 id="配置openstack-yum-源"><a href="#配置openstack-yum-源" class="headerlink" title="配置openstack yum 源"></a>配置openstack yum 源</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> cat &gt;&gt;/etc/yum.repos.d/openstack.repo&lt;&lt;eof</span><br><span class="line">[openstack]</span><br><span class="line">name=openstack</span><br><span class="line">baseurl=https://mirrors.aliyun.com/centos/7/cloud/x86_64/openstack-train</span><br><span class="line">gpgcheck=0</span><br><span class="line">enabled=1</span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum clean all</span><br><span class="line">yum makecache</span><br></pre></td></tr></table></figure>
 
 
+<pre><code># 安装数据库
+</code></pre>
+<ol>
+<li>安装软件包</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install mariadb mariadb-server python2-PyMySQL -y</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>修改mariadb配置文件</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt;/etc/my.cnf&lt;&lt;eof</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash"><span class="comment"># This group is read both both by the client and the server</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> use it <span class="keyword">for</span> options that affect everything</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash">[client-server]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash"><span class="comment"># This group is read by the server</span></span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash">[mysqld]</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Disabling symbolic-links is recommended to prevent assorted security risks</span></span><br><span class="line">symbolic-links=0</span><br><span class="line">basedir=/Data/servers/mysql</span><br><span class="line">datadir=/Data/servers/mysql</span><br><span class="line">socket=/Data/servers/mysql/mysql.sock</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash"><span class="comment"># include all files from the config directory</span></span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash">!includedir /etc/my.cnf.d</span></span><br><span class="line">[client]</span><br><span class="line">socket=/Data/servers/mysql/mysql.sock</span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
 
 
-<p>​    </p>
+<ol start="3">
+<li>增加MySQL openstack独立配置文件</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> cat &gt;&gt;/etc/my.cnf.d/openstack.cnf&lt;&lt;eof</span><br><span class="line">[mysqld]</span><br><span class="line">basedir=/Data/servers/mysql</span><br><span class="line">datadir=/Data/servers/mysql</span><br><span class="line">socket=/Data/servers/mysql/mysql.sock</span><br><span class="line">bind-address = 10.14.32.11</span><br><span class="line">default-storage-engine = innodb</span><br><span class="line">innodb_file_per_table = on</span><br><span class="line">max_connections = 4096</span><br><span class="line">collation-server = utf8_general_ci</span><br><span class="line">character-set-server = utf8</span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>启动mariadb及配置开机自启动</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start mariadb &amp;&amp; systemctl enable mariadb</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li><p>进行mariadb安全设置,优化mariadb最大连接</p>
+<p>改mariadb.service文件</p>
 </li>
 </ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt;/usr/lib/systemd/system/mariadb.service&lt;&lt;eof</span><br><span class="line">LimitNOFILE=655350</span><br><span class="line">LimitNPROC=655350</span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
+<p>​        重新加载系统服务，并重启mariadb</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl --system daemon-reload</span><br><span class="line">systemctl restart mariadb.service</span><br></pre></td></tr></table></figure>
+<h1 id="安装并配置消息队列"><a href="#安装并配置消息队列" class="headerlink" title="安装并配置消息队列"></a>安装并配置消息队列</h1><ol>
+<li>安装并启动rabbitmq</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum install rabbitmq-server -y</span><br><span class="line">systemctl start rabbitmq-server &amp;&amp; systemctl enable rabbitmq-server</span><br><span class="line">rabbitmqctl add_user openstack RABBIT_PASS</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>在rabbitmq里添加openstack账户</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl set_user_tags openstack administrator</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>查看指定用户权限信息</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl  list_user_permissions openstack</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>给openstack用户配置写和读权限</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl set_permissions openstack &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>启用rabbitmq web界面</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmq-plugins enable rabbitmq_management</span><br></pre></td></tr></table></figure>
+<p>访问<a target="_blank" rel="noopener" href="http://10.14.32.11:15672/">http://10.14.32.11:15672/</a></p>
+<p><img src="/images/openstack-train-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/image-20210129164701856.png" alt="image-20210129164701856"></p>
+<p>Rabbitmq默认的配置很低。所以需要优化五个参数：分别是：File descriptors、Socket descriptors、Erlang </p>
+<p>vim /etc/security/limits.conf</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">root            soft    core            1000</span><br><span class="line">root            hard    core            unlimited</span><br><span class="line">root            soft    nofile          655350</span><br><span class="line">root            hard    nofile          655350</span><br><span class="line">root            soft    nproc           655350</span><br><span class="line">root            hard    nproc           655350</span><br><span class="line">root            soft    memlock         unlimited</span><br><span class="line">root            hard    memlock         unlimited</span><br><span class="line">root            soft    stack           unlimited</span><br><span class="line">root            hard    stack           unlimited</span><br><span class="line">root            soft    sigpending      1024000</span><br><span class="line">root            hard    sigpending      1024000</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>重启rabbitmq</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl stop</span><br><span class="line">rabbitmq-server -detached</span><br></pre></td></tr></table></figure>
+<h1 id="安装memcached缓存密码使用"><a href="#安装memcached缓存密码使用" class="headerlink" title="安装memcached缓存密码使用"></a>安装memcached缓存密码使用</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install memcached python-memcached -y</span><br></pre></td></tr></table></figure>
+<p>修改memcached监听地址</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt;/etc/sysconfig/memcached&lt;&lt;eof</span><br><span class="line">PORT=&quot;11211&quot;</span><br><span class="line">USER=&quot;memcached&quot;</span><br><span class="line">MAXCONN=&quot;1024&quot;</span><br><span class="line">CACHESIZE=&quot;64&quot;</span><br><span class="line">OPTIONS=&quot;-l 127.0.0.1,::1,controller&quot;</span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
+<p>启动服务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start memcached &amp;&amp; systemctl enable memcached</span><br></pre></td></tr></table></figure>
+
+
+<p>至此基本环境已经安装完毕。</p>
 
     </div>
 
@@ -462,7 +519,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%A7%84%E5%88%92"><span class="nav-number">1.</span> <span class="nav-text">服务器规划</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E8%A7%84%E5%88%92"><span class="nav-number">2.</span> <span class="nav-text">软件规划</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BB%E6%9C%BA%E5%90%8D%E7%A7%B0%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">主机名称配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">4.</span> <span class="nav-text">时间服务器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%BB%E6%9C%BAhosts"><span class="nav-number">5.</span> <span class="nav-text">配置主机hosts</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%BB%E6%9C%BA%E4%BA%92%E4%BF%A1"><span class="nav-number">6.</span> <span class="nav-text">配置主机互信</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%A7%84%E5%88%92"><span class="nav-number">1.</span> <span class="nav-text">服务器规划</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E8%A7%84%E5%88%92"><span class="nav-number">2.</span> <span class="nav-text">软件规划</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BB%E6%9C%BA%E5%90%8D%E7%A7%B0%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">主机名称配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">4.</span> <span class="nav-text">时间服务器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%BB%E6%9C%BAhosts"><span class="nav-number">5.</span> <span class="nav-text">配置主机hosts</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%BB%E6%9C%BA%E4%BA%92%E4%BF%A1"><span class="nav-number">6.</span> <span class="nav-text">配置主机互信</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEopenstack-yum-%E6%BA%90"><span class="nav-number">7.</span> <span class="nav-text">配置openstack yum 源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%B9%B6%E9%85%8D%E7%BD%AE%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97"><span class="nav-number">8.</span> <span class="nav-text">安装并配置消息队列</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85memcached%E7%BC%93%E5%AD%98%E5%AF%86%E7%A0%81%E4%BD%BF%E7%94%A8"><span class="nav-number">9.</span> <span class="nav-text">安装memcached缓存密码使用</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -528,13 +585,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">1k</span>
+    <span title="站点总字数">4k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">1 分钟</span>
+    <span title="站点阅读时长">4 分钟</span>
 </div>
 
         
