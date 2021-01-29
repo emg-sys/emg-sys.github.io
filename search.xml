@@ -1,57 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search>
-  <entry>
-    <title>Hello World</title>
-    <url>/2021/01/28/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>openstack stein 安装环境准备</title>
-    <url>/2021/01/26/openstack-stein-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/</url>
-    <content><![CDATA[<p>##1.服务器规划<br>本次测试环境采用3台DELL物理机进行安装部署，管理vlan 33,业务vlan 11,服务器业务网卡不配置ip地址,采用provider vlan网络(通俗来讲就是网关在物理设备上面)  </p>
-<a id="more"></a>  
-
-<table>
-<thead>
-<tr>
-<th>管理IP</th>
-<th>业务IP 段</th>
-<th>硬件信息</th>
-<th>用途</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>10.14.32.11</td>
-<td>10.14.11.0/24</td>
-<td>2路*8core、4T、256G</td>
-<td>控制节点、网络节点</td>
-</tr>
-<tr>
-<td>10.14.32.12</td>
-<td>10.14.11.0/24</td>
-<td>2路*8core、4T、256G</td>
-<td>计算节点</td>
-</tr>
-<tr>
-<td>10.14.32.13</td>
-<td>10.14.11.0/24</td>
-<td>2路*8core、4T、256G</td>
-<td>计算节点</td>
-</tr>
-</tbody></table>
-<p>##2.软件规划<br>|  操作系统版本  |  软件版本  |<br>|  —- |  —-  |<br>| Centos7.6  |  openstack-stein  |<br>##3.主机名称配置<br>控制节点<br>hostnamectl set-hostname bjyz-10-14-32-11<br>计算节点<br>hostnamectl set-hostname bjyz-10-14-32-12<br>hostnamectl set-hostname bjyz-10-14-32-13</p>
-]]></content>
+<search> 
+  
+  
+    
+    <entry>
+      <title>Hello World</title>
+      <link href="2021/01/28/hello-world/"/>
+      <url>2021/01/28/hello-world/</url>
+      
+        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>openstack stein 安装环境准备</title>
+      <link href="2021/01/26/openstack-stein-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/"/>
+      <url>2021/01/26/openstack-stein-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/</url>
+      
+        <content type="html"><![CDATA[<p>[toc]</p><p>#1.服务器规划<br>本次测试环境采用3台DELL物理机进行安装部署，管理vlan 33,业务vlan 11,服务器业务网卡不配置ip地址,采用provider vlan网络(通俗来讲就是网关在物理设备上面)  </p><a id="more"></a>  <table><thead><tr><th>管理IP</th><th>业务IP 段</th><th>硬件信息</th><th>用途</th></tr></thead><tbody><tr><td>10.14.32.11</td><td>10.14.11.0/24</td><td>2路*8core、4T、256G</td><td>控制节点、网络节点</td></tr><tr><td>10.14.32.12</td><td>10.14.11.0/24</td><td>2路*8core、4T、256G</td><td>计算节点</td></tr><tr><td>10.14.32.13</td><td>10.14.11.0/24</td><td>2路*8core、4T、256G</td><td>计算节点</td></tr></tbody></table><p>#2.软件规划<br>|  操作系统版本  |  软件版本  |<br>|  —- |  —-  |<br>| Centos7.6  |  openstack-stein  |<br>#3.主机名称配置<br>控制节点<br><code>hostnamectl set-hostname bjyz-10-14-32-11</code><br>计算节点<br><code>hostnamectl set-hostname bjyz-10-14-32-12</code><br><code>hostnamectl set-hostname bjyz-10-14-32-13</code><br>#4.时间服务器<br>控制节点从互联网同步时间，计算节点从控制节点同步时间，centos7 采用chrony进行时间同步  </p><ol><li>所有节点安装chrony软件<br><code>yum install chrony -y</code>  </li><li>控制节点修改配置，本文只有允许两个网段可以同步时间<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt;&#x2F;etc&#x2F;chrony.conf &lt;&lt;eof</span><br><span class="line">server ntp1.aliyun.com  iburst</span><br><span class="line">driftfile &#x2F;var&#x2F;lib&#x2F;chrony&#x2F;drift</span><br><span class="line">makestep 1.0 3</span><br><span class="line">rtcsync</span><br><span class="line">allow 10.14.32.0&#x2F;24</span><br><span class="line">allow 10.14.11.0&#x2F;24</span><br><span class="line">eof</span><br></pre></td></tr></table></figure></li><li>控制节点启动chronyd 服务<br><code> systemctl start chronyd</code><br>验证同步结果<br><code>chronyc sources -v</code>  </li></ol><ol start="4"><li></li></ol>]]></content>
+      
+      
       <categories>
-        <category>openstack</category>
+          
+          <category> openstack </category>
+          
       </categories>
-  </entry>
+      
+      
+    </entry>
+    
+    
+  
+  
 </search>
