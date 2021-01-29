@@ -21,17 +21,20 @@
     var CONFIG = {"hostname":"emg-sys.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="1.服务器规划本次测试环境采用3台DELL物理机进行安装部署，管理vlan 33,业务vlan 11,服务器业务网卡不配置ip地址,采用provider vlan网络(通俗来讲就是网关在物理设备上面)">
+  <meta name="description" content="服务器规划本次测试环境采用3台DELL物理机进行安装部署，管理vlan 33,业务vlan 11,服务器业务网卡不配置ip地址,采用provider vlan网络(通俗来讲就是网关在物理设备上面)">
 <meta property="og:type" content="article">
 <meta property="og:title" content="openstack stein 安装环境准备">
 <meta property="og:url" content="http://emg-sys.github.io/2021/01/26/openstack-stein-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/index.html">
 <meta property="og:site_name" content="流星雨的博客">
-<meta property="og:description" content="1.服务器规划本次测试环境采用3台DELL物理机进行安装部署，管理vlan 33,业务vlan 11,服务器业务网卡不配置ip地址,采用provider vlan网络(通俗来讲就是网关在物理设备上面)">
+<meta property="og:description" content="服务器规划本次测试环境采用3台DELL物理机进行安装部署，管理vlan 33,业务vlan 11,服务器业务网卡不配置ip地址,采用provider vlan网络(通俗来讲就是网关在物理设备上面)">
 <meta property="og:locale">
+<meta property="og:image" content="http://emg-sys.github.io/images/openstack-stein-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/image-20210129151301718.png">
+<meta property="og:image" content="http://emg-sys.github.io/images/openstack-stein-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/image-20210129152910069.png">
 <meta property="article:published_time" content="2021-01-26T08:36:03.000Z">
-<meta property="article:modified_time" content="2021-01-29T03:25:20.946Z">
+<meta property="article:modified_time" content="2021-01-29T07:29:29.938Z">
 <meta property="article:author" content="James">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://emg-sys.github.io/images/openstack-stein-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/image-20210129151301718.png">
 
 <link rel="canonical" href="http://emg-sys.github.io/2021/01/26/openstack-stein-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/">
 
@@ -238,7 +241,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-01-29 11:25:20" itemprop="dateModified" datetime="2021-01-29T11:25:20+08:00">2021-01-29</time>
+                <time title="修改时间：2021-01-29 15:29:29" itemprop="dateModified" datetime="2021-01-29T15:29:29+08:00">2021-01-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -263,7 +266,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>793</span>
+              <span>990</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -282,7 +285,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="1-服务器规划"><a href="#1-服务器规划" class="headerlink" title="1.服务器规划"></a>1.服务器规划</h1><p>本次测试环境采用3台DELL物理机进行安装部署，管理vlan 33,业务vlan 11,服务器业务网卡不配置ip地址,采用provider vlan网络(通俗来讲就是网关在物理设备上面)  </p>
+        <h1 id="服务器规划"><a href="#服务器规划" class="headerlink" title="服务器规划"></a>服务器规划</h1><p>本次测试环境采用3台DELL物理机进行安装部署，管理vlan 33,业务vlan 11,服务器业务网卡不配置ip地址,采用provider vlan网络(通俗来讲就是网关在物理设备上面)  </p>
 <a id="more"></a>  
 
 <table>
@@ -313,7 +316,7 @@
 <td>计算节点</td>
 </tr>
 </tbody></table>
-<h1 id="2-软件规划"><a href="#2-软件规划" class="headerlink" title="2.软件规划"></a>2.软件规划</h1><table>
+<h1 id="软件规划"><a href="#软件规划" class="headerlink" title="软件规划"></a>软件规划</h1><table>
 <thead>
 <tr>
 <th>操作系统版本</th>
@@ -325,12 +328,37 @@
 <td>openstack-stein</td>
 </tr>
 </tbody></table>
-<h1 id="3-主机名称配置"><a href="#3-主机名称配置" class="headerlink" title="3.主机名称配置"></a>3.主机名称配置</h1><p>控制节点<br><code>hostnamectl set-hostname bjyz-10-14-32-11</code><br>计算节点<br><code>hostnamectl set-hostname bjyz-10-14-32-12</code><br><code>hostnamectl set-hostname bjyz-10-14-32-13</code></p>
-<h1 id="4-时间服务器"><a href="#4-时间服务器" class="headerlink" title="4.时间服务器"></a>4.时间服务器</h1><p>控制节点从互联网同步时间，计算节点从控制节点同步时间，centos7 采用chrony进行时间同步  </p>
+<h1 id="主机名称配置"><a href="#主机名称配置" class="headerlink" title="主机名称配置"></a>主机名称配置</h1><p>控制节点  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hostnamectl set-hostname bjyz-10-14-32-11</span><br></pre></td></tr></table></figure>
+<p>计算节点  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hostnamectl set-hostname bjyz-10-14-32-12</span><br><span class="line">hostnamectl set-hostname bjyz-10-14-32-13</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="时间服务器"><a href="#时间服务器" class="headerlink" title="时间服务器"></a>时间服务器</h1><p>控制节点从互联网同步时间，计算节点从控制节点同步时间，centos7 采用chrony进行时间同步  </p>
 <ol>
-<li>所有节点安装chrony软件<br><code>yum install chrony -y</code></li>
-<li>控制节点修改配置，本文只有允许两个网段可以同步时间<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt;&#x2F;etc&#x2F;chrony.conf &lt;&lt;eof</span><br><span class="line">server ntp1.aliyun.com  iburst</span><br><span class="line">driftfile &#x2F;var&#x2F;lib&#x2F;chrony&#x2F;drift</span><br><span class="line">makestep 1.0 3</span><br><span class="line">rtcsync</span><br><span class="line">allow 10.14.32.0&#x2F;24</span><br><span class="line">allow 10.14.11.0&#x2F;24</span><br><span class="line">eof</span><br></pre></td></tr></table></figure></li>
-<li>控制节点启动chronyd 服务<br><code>systemctl start chronyd</code><br>验证同步结果<br><code>chronyc sources -v</code></li>
+<li><p>所有节点安装chrony软件  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install chrony -y</span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>控制节点修改配置，本文只有允许两个网段可以同步时间</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt;/etc/chrony.conf &lt;&lt;eof</span><br><span class="line">server ntp1.aliyun.com  iburst</span><br><span class="line">driftfile /var/lib/chrony/drift</span><br><span class="line">makestep 1.0 3</span><br><span class="line">rtcsync</span><br><span class="line">allow 10.14.32.0/24</span><br><span class="line">allow 10.14.11.0/24</span><br><span class="line">eof</span><br></pre></td></tr></table></figure></li>
+<li><p>控制节点启动chronyd 服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start chronyd</span><br></pre></td></tr></table></figure>
+
+<p> 验证同步结果  </p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chronyc sources -v</span><br></pre></td></tr></table></figure>
+<p><img src="/images/openstack-stein-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/image-20210129151301718.png" alt="image-20210129151301718"></p>
+</li>
+<li><p>计算节点配置chrony服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt;/etc/chrony.conf&lt;&lt;eof</span><br><span class="line">server 10.14.32.11</span><br><span class="line">driftfile /var/lib/chrony/drift</span><br><span class="line">makestep 1.0 3</span><br><span class="line">rtcsync</span><br><span class="line">logdir /var/log/chrony</span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
+<p>计算节点启动chronyd服务并验证</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start chronyd &amp;&amp; systemctl enable chronyd</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chronyc sources -v</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="/images/openstack-stein-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/image-20210129152910069.png" alt="image-20210129152910069"></p>
+<p>​    </p>
+</li>
 </ol>
 
     </div>
@@ -426,7 +454,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%A7%84%E5%88%92"><span class="nav-number">1.</span> <span class="nav-text">1.服务器规划</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E8%BD%AF%E4%BB%B6%E8%A7%84%E5%88%92"><span class="nav-number">2.</span> <span class="nav-text">2.软件规划</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E4%B8%BB%E6%9C%BA%E5%90%8D%E7%A7%B0%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">3.主机名称配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E6%97%B6%E9%97%B4%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">4.</span> <span class="nav-text">4.时间服务器</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%A7%84%E5%88%92"><span class="nav-number">1.</span> <span class="nav-text">服务器规划</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E8%A7%84%E5%88%92"><span class="nav-number">2.</span> <span class="nav-text">软件规划</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BB%E6%9C%BA%E5%90%8D%E7%A7%B0%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">主机名称配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">4.</span> <span class="nav-text">时间服务器</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
