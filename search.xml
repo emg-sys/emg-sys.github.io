@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>openstack stein 安装环境准备</title>
-    <url>/2021/01/26/openstack-stein-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/</url>
+    <title>openstack train 安装环境准备</title>
+    <url>/2021/01/26/openstack-train-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/</url>
     <content><![CDATA[<h1 id="服务器规划"><a href="#服务器规划" class="headerlink" title="服务器规划"></a>服务器规划</h1><p>本次测试环境采用3台DELL物理机进行安装部署，管理vlan 33,业务vlan 11,服务器业务网卡不配置ip地址,采用provider vlan网络(通俗来讲就是网关在物理设备上面)  </p>
 <a id="more"></a>  
 
@@ -43,7 +43,7 @@
 </thead>
 <tbody><tr>
 <td>Centos7.6</td>
-<td>openstack-stein</td>
+<td>openstack-train</td>
 </tr>
 </tbody></table>
 <h1 id="主机名称配置"><a href="#主机名称配置" class="headerlink" title="主机名称配置"></a>主机名称配置</h1><p>控制节点  </p>
@@ -62,19 +62,34 @@
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt;/etc/chrony.conf &lt;&lt;eof</span><br><span class="line">server ntp1.aliyun.com  iburst</span><br><span class="line">driftfile /var/lib/chrony/drift</span><br><span class="line">makestep 1.0 3</span><br><span class="line">rtcsync</span><br><span class="line">allow 10.14.32.0/24</span><br><span class="line">allow 10.14.11.0/24</span><br><span class="line">eof</span><br></pre></td></tr></table></figure></li>
 <li><p>控制节点启动chronyd 服务</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl start chronyd</span><br></pre></td></tr></table></figure>
-
 <p> 验证同步结果  </p>
- <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chronyc sources -v</span><br></pre></td></tr></table></figure>
-<p><img src="/images/openstack-stein-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/image-20210129151301718.png" alt="image-20210129151301718"></p>
+ <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chronyc sources -v</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre><code>
+</code></pre>
 </li>
+</ol>
+<p><img src="/images/openstack-train-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/image-20210129151301718.png" alt="image-20210129151301718"></p>
+<ol start="4">
 <li><p>计算节点配置chrony服务</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt;/etc/chrony.conf&lt;&lt;eof</span><br><span class="line">server 10.14.32.11</span><br><span class="line">driftfile /var/lib/chrony/drift</span><br><span class="line">makestep 1.0 3</span><br><span class="line">rtcsync</span><br><span class="line">logdir /var/log/chrony</span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
 <p>计算节点启动chronyd服务并验证</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl start chronyd &amp;&amp; systemctl enable chronyd</span><br></pre></td></tr></table></figure>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chronyc sources -v</span><br></pre></td></tr></table></figure>
+<p><img src="/images/openstack-train-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/image-20210129152910069.png" alt="image-20210129152910069"></p>
+<h1 id="配置主机hosts"><a href="#配置主机hosts" class="headerlink" title="配置主机hosts"></a>配置主机hosts</h1><p>所有节点都要配置主机hosts文件</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt;/etc/hosts&lt;&lt;eof</span><br><span class="line">10.14.32.11 controller</span><br><span class="line">10.14.32.11 bjyz-10-14-32-11</span><br><span class="line">10.14.32.12 bjyz-10-14-32-12</span><br><span class="line">10.14.32.13 bjyz-10-14-32-13</span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
 
 
-<p><img src="/images/openstack-stein-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/image-20210129152910069.png" alt="image-20210129152910069"></p>
+
+
+<h1 id="配置主机互信"><a href="#配置主机互信" class="headerlink" title="配置主机互信"></a>配置主机互信</h1><p>控制节点到计算节点免密登录,全部默认即可</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
+<p>拷贝公钥到计算节点</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">for i in `seq 11 13`;do ssh-copy-id -i .ssh/id_rsa.pub 10.14.32.$i;done</span><br></pre></td></tr></table></figure>
+
+
+
+
 <p>​    </p>
 </li>
 </ol>
