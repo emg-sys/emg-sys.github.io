@@ -21,21 +21,19 @@
     var CONFIG = {"hostname":"emg-sys.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="前言本章节描述的是在控制节点如何安装镜像服务，这个配置采用本地硬盘存储镜像">
+  <meta name="description" content="前言这个章节主要描述在控制节点上如何安装Placement 服务，Placement 主要作用是让用户和代码能够便捷的使用、管理、监控整个 OpenStack 的系统资源。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="OpenStack-Train镜像glance服务安装-(三)">
-<meta property="og:url" content="http://emg-sys.github.io/2021/02/01/OpenStack-Train%E9%95%9C%E5%83%8Fglance%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85-%E4%B8%89/index.html">
+<meta property="og:title" content="OpenStack-Train-placement服务安装-(四)">
+<meta property="og:url" content="http://emg-sys.github.io/2021/02/01/OpenStack-Train-placement%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85-%E5%9B%9B/index.html">
 <meta property="og:site_name" content="流星雨的博客">
-<meta property="og:description" content="前言本章节描述的是在控制节点如何安装镜像服务，这个配置采用本地硬盘存储镜像">
+<meta property="og:description" content="前言这个章节主要描述在控制节点上如何安装Placement 服务，Placement 主要作用是让用户和代码能够便捷的使用、管理、监控整个 OpenStack 的系统资源。">
 <meta property="og:locale">
-<meta property="og:image" content="http://emg-sys.github.io/images/OpenStack-Train%E9%95%9C%E5%83%8Fglance%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85-%E4%B8%89/image-20210201105609772.png">
-<meta property="article:published_time" content="2021-02-01T01:22:19.000Z">
-<meta property="article:modified_time" content="2021-02-01T05:52:26.977Z">
+<meta property="article:published_time" content="2021-02-01T03:07:35.000Z">
+<meta property="article:modified_time" content="2021-02-01T07:14:31.282Z">
 <meta property="article:author" content="James">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://emg-sys.github.io/images/OpenStack-Train%E9%95%9C%E5%83%8Fglance%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85-%E4%B8%89/image-20210201105609772.png">
 
-<link rel="canonical" href="http://emg-sys.github.io/2021/02/01/OpenStack-Train%E9%95%9C%E5%83%8Fglance%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85-%E4%B8%89/">
+<link rel="canonical" href="http://emg-sys.github.io/2021/02/01/OpenStack-Train-placement%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85-%E5%9B%9B/">
 
 
 <script id="page-configurations">
@@ -48,7 +46,7 @@
   };
 </script>
 
-  <title>OpenStack-Train镜像glance服务安装-(三) | 流星雨的博客</title>
+  <title>OpenStack-Train-placement服务安装-(四) | 流星雨的博客</title>
   
 
 
@@ -210,7 +208,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://emg-sys.github.io/2021/02/01/OpenStack-Train%E9%95%9C%E5%83%8Fglance%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85-%E4%B8%89/">
+    <link itemprop="mainEntityOfPage" href="http://emg-sys.github.io/2021/02/01/OpenStack-Train-placement%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85-%E5%9B%9B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -223,7 +221,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          OpenStack-Train镜像glance服务安装-(三)
+          OpenStack-Train-placement服务安装-(四)
         </h1>
 
         <div class="post-meta">
@@ -234,7 +232,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-02-01 09:22:19 / 修改时间：13:52:26" itemprop="dateCreated datePublished" datetime="2021-02-01T09:22:19+08:00">2021-02-01</time>
+              <time title="创建时间：2021-02-01 11:07:35 / 修改时间：15:14:31" itemprop="dateCreated datePublished" datetime="2021-02-01T11:07:35+08:00">2021-02-01</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -259,14 +257,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.7k</span>
+              <span>1.6k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -278,50 +276,38 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本章节描述的是在控制节点如何安装镜像服务，这个配置采用本地硬盘存储镜像</p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这个章节主要描述在控制节点上如何安装Placement 服务，Placement 主要作用是让用户和代码能够便捷的使用、管理、监控整个 OpenStack 的系统资源。</p>
 <a id="more"></a>
 
-<h1 id="创建数据库授权"><a href="#创建数据库授权" class="headerlink" title="创建数据库授权"></a>创建数据库授权</h1><ol>
-<li><p>创建数据库表</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br><span class="line">CREATE DATABASE glance;</span><br><span class="line">GRANT ALL PRIVILEGES ON glance.* TO &#x27;glance&#x27;@&#x27;localhost&#x27; \</span><br><span class="line">  IDENTIFIED BY &#x27;GLANCE_DBPASS&#x27;;</span><br><span class="line">GRANT ALL PRIVILEGES ON glance.* TO &#x27;glance&#x27;@&#x27;%&#x27; \</span><br><span class="line">  IDENTIFIED BY &#x27;GLANCE_DBPASS&#x27;;</span><br></pre></td></tr></table></figure>
 
-</li>
-<li><p>在keystone创建glance用户关联角色</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openstack user create --domain default --password-prompt GLANCE_DBPASS</span><br></pre></td></tr></table></figure>
-<p>将glance用户加入service项目授予admin角色</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openstack role add --project service --user glance admin</span><br></pre></td></tr></table></figure>
-<p>在keystone上创建服务实体和注册api</p>
-<p>创建glance服务实体</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openstack service create --name glance \</span><br><span class="line">  --description &quot;OpenStack Image&quot; image</span><br></pre></td></tr></table></figure></li>
-<li><p>创建镜像服务api端点</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">openstack endpoint create --region RegionOne \</span><br><span class="line"> image public http://controller:9292;</span><br><span class="line">openstack endpoint create --region RegionOne \</span><br><span class="line"> image internal http://controller:9292;</span><br><span class="line">openstack endpoint create --region RegionOne \</span><br><span class="line"> image admin http://controller:9292;</span><br><span class="line">   </span><br></pre></td></tr></table></figure>
-<h1 id="安装服务和相应软件包"><a href="#安装服务和相应软件包" class="headerlink" title="安装服务和相应软件包"></a>安装服务和相应软件包</h1></li>
+
+<h1 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h1><ol>
+<li><p>创建数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br><span class="line">CREATE DATABASE placement;</span><br><span class="line">GRANT ALL PRIVILEGES ON placement.* TO &#39;placement&#39;@&#39;localhost&#39; \</span><br><span class="line">  IDENTIFIED BY &#39;PLACEMENT_DBPASS&#39;;</span><br><span class="line">MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON placement.* TO &#39;placement&#39;@&#39;%&#39; \</span><br><span class="line">  IDENTIFIED BY &#39;PLACEMENT_DBPASS&#39;;</span><br></pre></td></tr></table></figure></li>
+<li><p>配置用户和挂载点</p>
+<p>用户默认使用 <code>PLACEMENT_PASS</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">openstack user create --domain default --password-prompt placement</span><br><span class="line">User Password:</span><br><span class="line">Repeat User Password:</span><br></pre></td></tr></table></figure></li>
+<li><p>将placement用户加入service项目授予admin角色</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openstack role add --project service --user placement admin</span><br></pre></td></tr></table></figure></li>
+<li><p>创建服务实体</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openstack service create --name placement \</span><br><span class="line">  --description &quot;Placement API&quot; placement</span><br></pre></td></tr></table></figure></li>
+<li><p>创建服务端点</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">openstack endpoint create --region RegionOne \</span><br><span class="line">  placement public http://controller:8778</span><br><span class="line">openstack endpoint create --region RegionOne \</span><br><span class="line">  placement internal http://controller:8778</span><br><span class="line">openstack endpoint create --region RegionOne \</span><br><span class="line">  placement admin http://controller:8778</span><br></pre></td></tr></table></figure>
+<h1 id="安装配置组件"><a href="#安装配置组件" class="headerlink" title="安装配置组件"></a>安装配置组件</h1></li>
 <li><p>安装软件包</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install openstack-glance -y</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install openstack-placement-api</span><br></pre></td></tr></table></figure></li>
+<li><p>修改配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt;/etc/placement/placement.conf&lt;&lt;eof</span><br><span class="line">[DEFAULT]</span><br><span class="line">[api]</span><br><span class="line">auth_strategy = keystone</span><br><span class="line">[cors]</span><br><span class="line">[keystone_authtoken]</span><br><span class="line">auth_url = http://controller:5000/v3</span><br><span class="line">memcached_servers = controller:11211</span><br><span class="line">auth_type = password</span><br><span class="line">project_domain_name = Default</span><br><span class="line">user_domain_name = Default</span><br><span class="line">project_name = service</span><br><span class="line">username = placement</span><br><span class="line">password = PLACEMENT_PASS</span><br><span class="line">[oslo_policy]</span><br><span class="line">[placement]</span><br><span class="line">[placement_database]</span><br><span class="line">connection = mysql+pymysql://placement:PLACEMENT_PASS@controller/placement</span><br><span class="line">[profiler]</span><br><span class="line">eof</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>初始化数据库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su -s /bin/sh -c &quot;placement-manage db sync&quot; placement</span><br></pre></td></tr></table></figure></li>
+<li><p>启动服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart httpd</span><br></pre></td></tr></table></figure>
 
-</li>
-<li><p>修改配置文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/glance/glance-api.conf&#123;,.bak&#125;;</span><br><span class="line">grep &#x27;^[a-Z\[]&#x27; /etc/glance/glance-api.conf.bak &gt;/etc/glance/glance-api.conf;</span><br><span class="line">cat &gt;&gt;/etc/glance/glance-api.conf&lt;&lt;eof</span><br><span class="line">[DEFAULT]</span><br><span class="line">[cinder]</span><br><span class="line">[cors]</span><br><span class="line">[database]</span><br><span class="line">connection = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance</span><br><span class="line">[file]</span><br><span class="line">[glance.store.http.store]</span><br><span class="line">[glance.store.rbd.store]</span><br><span class="line">[glance.store.sheepdog.store]</span><br><span class="line">[glance.store.swift.store]</span><br><span class="line">[glance.store.vmware_datastore.store]</span><br><span class="line">[glance_store]</span><br><span class="line">stores = file,http</span><br><span class="line">default_store = file</span><br><span class="line">filesystem_store_datadir = /Data/servers/glance/images/</span><br><span class="line">[image_format]</span><br><span class="line">[keystone_authtoken]</span><br><span class="line">www_authenticate_uri  = http://controller:5000</span><br><span class="line">auth_url = http://controller:5000</span><br><span class="line">memcached_servers = controller:11211</span><br><span class="line">auth_type = password</span><br><span class="line">project_domain_name = Default</span><br><span class="line">user_domain_name = Default</span><br><span class="line">project_name = service</span><br><span class="line">username = glance</span><br><span class="line">password = GLANCE_DBPASS</span><br><span class="line">[oslo_concurrency]</span><br><span class="line">[oslo_messaging_amqp]</span><br><span class="line">[oslo_messaging_kafka]</span><br><span class="line">[oslo_messaging_notifications]</span><br><span class="line">[oslo_messaging_rabbit]</span><br><span class="line">[oslo_middleware]</span><br><span class="line">[oslo_policy]</span><br><span class="line">[paste_deploy]</span><br><span class="line">flavor = keystone</span><br><span class="line">[profiler]</span><br><span class="line">[store_type_location_strategy]</span><br><span class="line">[task]</span><br><span class="line">[taskflow_executor]</span><br><span class="line">eof</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p>同步数据库并验证</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">su -s &#x2F;bin&#x2F;sh -c &quot;glance-manage db_sync&quot; glance;</span><br><span class="line">mysql glance -e &quot;show tables&quot;;</span><br></pre></td></tr></table></figure></li>
-<li><p>启动服务并设置为开机启动</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable openstack-glance-api.service</span><br><span class="line">systemctl start openstack-glance-api.service</span><br></pre></td></tr></table></figure>
-<h1 id="验证操作"><a href="#验证操作" class="headerlink" title="验证操作"></a>验证操作</h1></li>
-<li><p>下载镜像,上传cirros-0.3.4-x86_64-disk.img镜像</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.imgc</span><br></pre></td></tr></table></figure>
-
-</li>
-<li><p>上传镜像</p>
-<p># 执行命令上传镜像<br># 使用qcow2格式上传，bare容器格式上传到镜像服务<br># 设置公共可见，这样所所有的项目都可以访问</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">glance image-create --name &quot;cirros&quot; \</span><br><span class="line">  --file cirros-0.4.0-x86_64-disk.img \</span><br><span class="line">  --disk-format qcow2 --container-format bare \</span><br><span class="line">  --visibility public</span><br></pre></td></tr></table></figure>
-<p>验证上传镜像</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openstack  image list</span><br></pre></td></tr></table></figure>
-<p><img src="/images/OpenStack-Train%E9%95%9C%E5%83%8Fglance%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85-%E4%B8%89/image-20210201105609772.png" alt="image-20210201105609772"></p>
 </li>
 </ol>
-<p>参考文档：</p>
-<p><a target="_blank" rel="noopener" href="https://docs.openstack.org/glance/train/install/install-obs.html#prerequisites">https://docs.openstack.org/glance/train/install/install-obs.html#prerequisites</a></p>
-<p><a target="_blank" rel="noopener" href="http://poweroff.cn/openstack/357.html">http://poweroff.cn/openstack/357.html</a></p>
+<p>参考文档:</p>
+<p><a target="_blank" rel="noopener" href="https://docs.openstack.org/placement/stein/install/install-rdo.html">https://docs.openstack.org/placement/stein/install/install-rdo.html</a></p>
+<p><a target="_blank" rel="noopener" href="http://poweroff.cn/openstack/358.html">http://poweroff.cn/openstack/358.html</a></p>
 
     </div>
 
@@ -337,7 +323,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://emg-sys.github.io/2021/02/01/OpenStack-Train%E9%95%9C%E5%83%8Fglance%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85-%E4%B8%89/" title="OpenStack-Train镜像glance服务安装-(三)">http://emg-sys.github.io/2021/02/01/OpenStack-Train镜像glance服务安装-三/</a>
+    <a href="http://emg-sys.github.io/2021/02/01/OpenStack-Train-placement%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85-%E5%9B%9B/" title="OpenStack-Train-placement服务安装-(四)">http://emg-sys.github.io/2021/02/01/OpenStack-Train-placement服务安装-四/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -354,12 +340,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/01/29/OpenStack-Train%E8%AE%A4%E8%AF%81keystone%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85-%E4%BA%8C/" rel="prev" title="OpenStack-Train认证keystone服务安装(二)">
-      <i class="fa fa-chevron-left"></i> OpenStack-Train认证keystone服务安装(二)
+    <a href="/2021/02/01/OpenStack-Train%E9%95%9C%E5%83%8Fglance%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85-%E4%B8%89/" rel="prev" title="OpenStack-Train镜像glance服务安装-(三)">
+      <i class="fa fa-chevron-left"></i> OpenStack-Train镜像glance服务安装-(三)
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/02/01/OpenStack-Train-placement%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85-%E5%9B%9B/" rel="next" title="OpenStack-Train-placement服务安装-(四)">
-      OpenStack-Train-placement服务安装-(四) <i class="fa fa-chevron-right"></i>
+    <a href="/2021/02/01/OpenStack-Train-Nova%E6%9C%8D%E5%8A%A1%E6%8E%A7%E5%88%B6%E8%8A%82%E7%82%B9%E5%AE%89%E8%A3%85-%E4%BA%94/" rel="next" title="OpenStack-Train-Nova服务控制节点安装-(五)">
+      OpenStack-Train-Nova服务控制节点安装-(五) <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -419,7 +405,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8E%88%E6%9D%83"><span class="nav-number">2.</span> <span class="nav-text">创建数据库授权</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%9C%8D%E5%8A%A1%E5%92%8C%E7%9B%B8%E5%BA%94%E8%BD%AF%E4%BB%B6%E5%8C%85"><span class="nav-number">3.</span> <span class="nav-text">安装服务和相应软件包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E6%93%8D%E4%BD%9C"><span class="nav-number">4.</span> <span class="nav-text">验证操作</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">2.</span> <span class="nav-text">创建数据库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E7%BB%84%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">安装配置组件</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

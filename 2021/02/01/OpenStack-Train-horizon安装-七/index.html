@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"emg-sys.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="前言horizon 提供一个web操作界面openstack的系统。使用Django框架基于openstack api开发,支持session存储在db、memcached, 支持集群">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenStack-Train-horizon安装-(七)">
+<meta property="og:url" content="http://emg-sys.github.io/2021/02/01/OpenStack-Train-horizon%E5%AE%89%E8%A3%85-%E4%B8%83/index.html">
+<meta property="og:site_name" content="流星雨的博客">
+<meta property="og:description" content="前言horizon 提供一个web操作界面openstack的系统。使用Django框架基于openstack api开发,支持session存储在db、memcached, 支持集群">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-02-01T07:19:25.000Z">
+<meta property="article:modified_time" content="2021-02-01T07:37:51.382Z">
+<meta property="article:author" content="James">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://emg-sys.github.io/2021/02/01/OpenStack-Train-horizon%E5%AE%89%E8%A3%85-%E4%B8%83/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>OpenStack-Train-horizon安装-(七) | 流星雨的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">流星雨的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">IT博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/emg-sys" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://emg-sys.github.io/2021/02/01/OpenStack-Train-horizon%E5%AE%89%E8%A3%85-%E4%B8%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="James">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="流星雨的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OpenStack-Train-horizon安装-(七)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-02-01 15:19:25 / 修改时间：15:37:51" itemprop="dateCreated datePublished" datetime="2021-02-01T15:19:25+08:00">2021-02-01</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>15k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>14 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>horizon 提供一个web操作界面openstack的系统。使用Django框架基于openstack api开发,支持session存储在db、memcached, 支持集群</p>
+<a id="more"></a>
+
+<h1 id="安装软件包"><a href="#安装软件包" class="headerlink" title="安装软件包"></a>安装软件包</h1><ol>
+<li><p>安装dashboard</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install openstack-dashboard -y</span><br></pre></td></tr></table></figure></li>
+<li><p>修改配置文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt;/etc/openstack-dashboard/local_settings&lt;&lt;eof</span><br><span class="line"><span class="meta">#</span><span class="bash"> -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> ----------------------------------------------------------------------</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> NOTE: The default values of the settings are defined <span class="keyword">in</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> openstack_dashboard/defaults.py. Prevously most available settings</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> were listed <span class="keyword">in</span> this example file, but it is no longer <span class="literal">true</span>.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> For available settings, see openstack_dashboard/defaults.py and</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> the horizon setting reference found at</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> https://docs.openstack.org/horizon/latest/configuration/settings.html.</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash"><span class="comment"># Django related settings and HORIZON_CONFIG still exist here.</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Keep <span class="keyword">in</span> my mind that they will be revisit <span class="keyword">in</span> upcoming releases.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ----------------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line">from django.utils.translation import ugettext_lazy as _</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">from openstack_dashboard.settings import HORIZON_CONFIG</span><br><span class="line"></span><br><span class="line">DEBUG = False</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> This setting controls whether or not compression is enabled. Disabling</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> compression makes Horizon considerably slower, but makes it much easier</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> to debug JS and CSS changes</span></span><br><span class="line"><span class="meta">#</span><span class="bash">COMPRESS_ENABLED = not DEBUG</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> This setting controls whether compression happens on the fly, or offline</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> with `python manage.py compress`</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> See https://django-compressor.readthedocs.io/en/latest/usage/<span class="comment">#offline-compression</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="keyword">for</span> more information</span></span><br><span class="line"><span class="meta">#</span><span class="bash">COMPRESS_OFFLINE = not DEBUG</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> If horizon is running <span class="keyword">in</span> production (DEBUG is False), <span class="built_in">set</span> this</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> with the list of host/domain names that the application can serve.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> For more information see:</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> https://docs.djangoproject.com/en/dev/ref/settings/<span class="comment">#allowed-hosts</span></span></span><br><span class="line">ALLOWED_HOSTS = [&#x27;horizon.example.com&#x27;, &#x27;localhost&#x27;,&#x27;10.14.32.11&#x27;]</span><br><span class="line">WEBROOT = &#x27;/dashboard&#x27;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Set SSL proxy settings:</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Pass this header from the proxy after terminating the SSL,</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> and don<span class="string">&#x27;t forget to strip it from the client&#x27;</span>s request.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> For more information see:</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> https://docs.djangoproject.com/en/dev/ref/settings/<span class="comment">#secure-proxy-ssl-header</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash">SECURE_PROXY_SSL_HEADER = (<span class="string">&#x27;HTTP_X_FORWARDED_PROTO&#x27;</span>, <span class="string">&#x27;https&#x27;</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> If Horizon is being served through SSL, <span class="keyword">then</span> uncomment the following two</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> settings to better secure the cookies from security exploits</span></span><br><span class="line"><span class="meta">#</span><span class="bash">CSRF_COOKIE_SECURE = True</span></span><br><span class="line"><span class="meta">#</span><span class="bash">SESSION_COOKIE_SECURE = True</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> If provided, a <span class="string">&quot;Report Bug&quot;</span> link will be displayed <span class="keyword">in</span> the site header</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">which</span> links to the value of this setting (ideally a URL containing</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> information on how to report issues).</span></span><br><span class="line"><span class="meta">#</span><span class="bash">HORIZON_CONFIG[<span class="string">&quot;bug_url&quot;</span>] = <span class="string">&quot;http://bug-report.example.com&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Show backdrop element outside the modal, <span class="keyword">do</span> not close the modal</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> after clicking on backdrop.</span></span><br><span class="line"><span class="meta">#</span><span class="bash">HORIZON_CONFIG[<span class="string">&quot;modal_backdrop&quot;</span>] = <span class="string">&quot;static&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Specify a regular expression to validate user passwords.</span></span><br><span class="line"><span class="meta">#</span><span class="bash">HORIZON_CONFIG[<span class="string">&quot;password_validator&quot;</span>] = &#123;</span></span><br><span class="line"><span class="meta">#</span><span class="bash">    <span class="string">&quot;regex&quot;</span>: <span class="string">&#x27;.*&#x27;</span>,</span></span><br><span class="line"><span class="meta">#</span><span class="bash">    <span class="string">&quot;help_text&quot;</span>: _(<span class="string">&quot;Your password does not meet the requirements.&quot;</span>),</span></span><br><span class="line"><span class="meta">#</span><span class="bash">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Turn off browser autocompletion <span class="keyword">for</span> forms including the login form and</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> the database creation workflow <span class="keyword">if</span> so desired.</span></span><br><span class="line"><span class="meta">#</span><span class="bash">HORIZON_CONFIG[<span class="string">&quot;password_autocomplete&quot;</span>] = <span class="string">&quot;off&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Setting this to True will <span class="built_in">disable</span> the reveal button <span class="keyword">for</span> password fields,</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> including on the login form.</span></span><br><span class="line"><span class="meta">#</span><span class="bash">HORIZON_CONFIG[<span class="string">&quot;disable_password_reveal&quot;</span>] = False</span></span><br><span class="line"></span><br><span class="line">LOCAL_PATH = &#x27;/tmp&#x27;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Set custom secret key:</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> You can either <span class="built_in">set</span> it to a specific value or you can <span class="built_in">let</span> horizon generate a</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> default secret key that is unique on this machine, e.i. regardless of the</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> amount of Python WSGI workers (<span class="keyword">if</span> used behind Apache+mod_wsgi): However,</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> there may be situations <span class="built_in">where</span> you would want to <span class="built_in">set</span> this explicitly, e.g.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> when multiple dashboard instances are distributed on different machines</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> (usually behind a load-balancer). Either you have to make sure that a session</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> gets all requests routed to the same dashboard instance or you <span class="built_in">set</span> the same</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> SECRET_KEY <span class="keyword">for</span> all of them.</span></span><br><span class="line">SECRET_KEY=&#x27;f567f3e8b7772f9a77da&#x27;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> We recommend you use memcached <span class="keyword">for</span> development; otherwise after every reload</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> of the django development server, you will have to login again. To use</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> memcached <span class="built_in">set</span> CACHES to something like below.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> For more information, see</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> https://docs.djangoproject.com/en/1.11/topics/http/sessions/.</span></span><br><span class="line"><span class="meta">#</span><span class="bash">CACHES = &#123;</span></span><br><span class="line"><span class="meta">#</span><span class="bash">    <span class="string">&#x27;default&#x27;</span>: &#123;</span></span><br><span class="line"><span class="meta">#</span><span class="bash">        <span class="string">&#x27;BACKEND&#x27;</span>: <span class="string">&#x27;django.core.cache.backends.memcached.MemcachedCache&#x27;</span>,</span></span><br><span class="line"><span class="meta">#</span><span class="bash">        <span class="string">&#x27;LOCATION&#x27;</span>: <span class="string">&#x27;127.0.0.1:11211&#x27;</span>,</span></span><br><span class="line"><span class="meta">#</span><span class="bash">    &#125;,</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash"><span class="comment">#&#125;</span></span></span><br><span class="line">CACHES = &#123;</span><br><span class="line">    &#x27;default&#x27;: &#123;</span><br><span class="line">         &#x27;BACKEND&#x27;: &#x27;django.core.cache.backends.memcached.MemcachedCache&#x27;,</span><br><span class="line">         &#x27;LOCATION&#x27;: &#x27;controller:11211&#x27;,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> If you use ``tox -e runserver`` <span class="keyword">for</span> developments,<span class="keyword">then</span> configure</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> SESSION_ENGINE to django.contrib.sessions.backends.signed_cookies</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> as shown below:</span></span><br><span class="line"><span class="meta">#</span><span class="bash">SESSION_ENGINE = <span class="string">&#x27;django.contrib.sessions.backends.signed_cookies&#x27;</span></span></span><br><span class="line">SESSION_ENGINE = &#x27;django.contrib.sessions.backends.cache&#x27;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Send email to the console by default</span></span><br><span class="line">EMAIL_BACKEND = &#x27;django.core.mail.backends.console.EmailBackend&#x27;</span><br><span class="line"><span class="meta">#</span><span class="bash"> Or send them to /dev/null</span></span><br><span class="line"><span class="meta">#</span><span class="bash">EMAIL_BACKEND = <span class="string">&#x27;django.core.mail.backends.dummy.EmailBackend&#x27;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Configure these <span class="keyword">for</span> your outgoing email host</span></span><br><span class="line"><span class="meta">#</span><span class="bash">EMAIL_HOST = <span class="string">&#x27;smtp.my-company.com&#x27;</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash">EMAIL_PORT = 25</span></span><br><span class="line"><span class="meta">#</span><span class="bash">EMAIL_HOST_USER = <span class="string">&#x27;djangomail&#x27;</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash">EMAIL_HOST_PASSWORD = <span class="string">&#x27;top-secret!&#x27;</span></span></span><br><span class="line"></span><br><span class="line">OPENSTACK_HOST = &quot;controller&quot;</span><br><span class="line">PENSTACK_KEYSTONE_URL = &quot;http://%s:5000/v3&quot; % OPENSTACK_HOST</span><br><span class="line">OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True</span><br><span class="line"></span><br><span class="line">OPENSTACK_API_VERSIONS = &#123;</span><br><span class="line">    &quot;identity&quot;: 3,</span><br><span class="line">    &quot;image&quot;: 2,</span><br><span class="line">    &quot;volume&quot;: 3,</span><br><span class="line">&#125;</span><br><span class="line">OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = &quot;Default&quot;</span><br><span class="line">OPENSTACK_KEYSTONE_DEFAULT_ROLE = &quot;user&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> The OPENSTACK_NEUTRON_NETWORK settings can be used to <span class="built_in">enable</span> optional</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> services provided by neutron. Options currently available are load</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> balancer service, security groups, quotas, VPN service.</span></span><br><span class="line">OPENSTACK_NEUTRON_NETWORK = &#123;</span><br><span class="line">    &#x27;enable_router&#x27;: False,</span><br><span class="line">    &#x27;enable_quotas&#x27;: False,</span><br><span class="line">    &#x27;enable_distributed_router&#x27;: False,</span><br><span class="line">    &#x27;enable_ha_router&#x27;: False,</span><br><span class="line">    &#x27;enable_lb&#x27;: False,</span><br><span class="line">    &#x27;enable_firewall&#x27;: False,</span><br><span class="line">    &#x27;enable_vpn&#x27;: False,</span><br><span class="line">    &#x27;enable_fip_topology_check&#x27;: False,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> The timezone of the server. This should correspond with the timezone</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> of your entire OpenStack installation, and hopefully be <span class="keyword">in</span> UTC.</span></span><br><span class="line">TIME_ZONE = &quot;Asia/Shanghai&quot;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Change this patch to the appropriate list of tuples containing</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> a key, label and static directory containing two files:</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> _variables.scss and _styles.scss</span></span><br><span class="line"><span class="meta">#</span><span class="bash">AVAILABLE_THEMES = [</span></span><br><span class="line"><span class="meta">#</span><span class="bash">    (<span class="string">&#x27;default&#x27;</span>, <span class="string">&#x27;Default&#x27;</span>, <span class="string">&#x27;themes/default&#x27;</span>),</span></span><br><span class="line"><span class="meta">#</span><span class="bash">    (<span class="string">&#x27;material&#x27;</span>, <span class="string">&#x27;Material&#x27;</span>, <span class="string">&#x27;themes/material&#x27;</span>),</span></span><br><span class="line"><span class="meta">#</span><span class="bash">    (<span class="string">&#x27;example&#x27;</span>, <span class="string">&#x27;Example&#x27;</span>, <span class="string">&#x27;themes/example&#x27;</span>),</span></span><br><span class="line"><span class="meta">#</span><span class="bash">]</span></span><br><span class="line"></span><br><span class="line">LOGGING = &#123;</span><br><span class="line">    &#x27;version&#x27;: 1,</span><br><span class="line">    # When set to True this will disable all logging except</span><br><span class="line">    # for loggers specified in this configuration dictionary. Note that</span><br><span class="line">    # if nothing is specified here and disable_existing_loggers is True,</span><br><span class="line">    # django.db.backends will still log unless it is disabled explicitly.</span><br><span class="line">    &#x27;disable_existing_loggers&#x27;: False,</span><br><span class="line">    # If apache2 mod_wsgi is used to deploy OpenStack dashboard</span><br><span class="line">    # timestamp is output by mod_wsgi. If WSGI framework you use does not</span><br><span class="line">    # output timestamp for logging, add %(asctime)s in the following</span><br><span class="line">    # format definitions.</span><br><span class="line">    &#x27;formatters&#x27;: &#123;</span><br><span class="line">        &#x27;console&#x27;: &#123;</span><br><span class="line">            &#x27;format&#x27;: &#x27;%(levelname)s %(name)s %(message)s&#x27;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;operation&#x27;: &#123;</span><br><span class="line">            # The format of &quot;%(message)s&quot; is defined by</span><br><span class="line">            # OPERATION_LOG_OPTIONS[&#x27;format&#x27;]</span><br><span class="line">            &#x27;format&#x27;: &#x27;%(message)s&#x27;</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x27;handlers&#x27;: &#123;</span><br><span class="line">        &#x27;null&#x27;: &#123;</span><br><span class="line">            &#x27;level&#x27;: &#x27;DEBUG&#x27;,</span><br><span class="line">            &#x27;class&#x27;: &#x27;logging.NullHandler&#x27;,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;console&#x27;: &#123;</span><br><span class="line">            # Set the level to &quot;DEBUG&quot; for verbose output logging.</span><br><span class="line">            &#x27;level&#x27;: &#x27;DEBUG&#x27; if DEBUG else &#x27;INFO&#x27;,</span><br><span class="line">            &#x27;class&#x27;: &#x27;logging.StreamHandler&#x27;,</span><br><span class="line">            &#x27;formatter&#x27;: &#x27;console&#x27;,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;operation&#x27;: &#123;</span><br><span class="line">            &#x27;level&#x27;: &#x27;INFO&#x27;,</span><br><span class="line">            &#x27;class&#x27;: &#x27;logging.StreamHandler&#x27;,</span><br><span class="line">            &#x27;formatter&#x27;: &#x27;operation&#x27;,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x27;loggers&#x27;: &#123;</span><br><span class="line">        &#x27;horizon&#x27;: &#123;</span><br><span class="line">            &#x27;handlers&#x27;: [&#x27;console&#x27;],</span><br><span class="line">            &#x27;level&#x27;: &#x27;DEBUG&#x27;,</span><br><span class="line">            &#x27;propagate&#x27;: False,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;horizon.operation_log&#x27;: &#123;</span><br><span class="line">            &#x27;handlers&#x27;: [&#x27;operation&#x27;],</span><br><span class="line">            &#x27;level&#x27;: &#x27;INFO&#x27;,</span><br><span class="line">            &#x27;propagate&#x27;: False,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;openstack_dashboard&#x27;: &#123;</span><br><span class="line">            &#x27;handlers&#x27;: [&#x27;console&#x27;],</span><br><span class="line">            &#x27;level&#x27;: &#x27;DEBUG&#x27;,</span><br><span class="line">            &#x27;propagate&#x27;: False,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;novaclient&#x27;: &#123;</span><br><span class="line">            &#x27;handlers&#x27;: [&#x27;console&#x27;],</span><br><span class="line">            &#x27;level&#x27;: &#x27;DEBUG&#x27;,</span><br><span class="line">            &#x27;propagate&#x27;: False,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;cinderclient&#x27;: &#123;</span><br><span class="line">            &#x27;handlers&#x27;: [&#x27;console&#x27;],</span><br><span class="line">            &#x27;level&#x27;: &#x27;DEBUG&#x27;,</span><br><span class="line">            &#x27;propagate&#x27;: False,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;keystoneauth&#x27;: &#123;</span><br><span class="line">            &#x27;handlers&#x27;: [&#x27;console&#x27;],</span><br><span class="line">            &#x27;level&#x27;: &#x27;DEBUG&#x27;,</span><br><span class="line">            &#x27;propagate&#x27;: False,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;keystoneclient&#x27;: &#123;</span><br><span class="line">            &#x27;handlers&#x27;: [&#x27;console&#x27;],</span><br><span class="line">            &#x27;level&#x27;: &#x27;DEBUG&#x27;,</span><br><span class="line">            &#x27;propagate&#x27;: False,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;glanceclient&#x27;: &#123;</span><br><span class="line">            &#x27;handlers&#x27;: [&#x27;console&#x27;],</span><br><span class="line">            &#x27;level&#x27;: &#x27;DEBUG&#x27;,</span><br><span class="line">            &#x27;propagate&#x27;: False,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;neutronclient&#x27;: &#123;</span><br><span class="line">            &#x27;handlers&#x27;: [&#x27;console&#x27;],</span><br><span class="line">            &#x27;level&#x27;: &#x27;DEBUG&#x27;,</span><br><span class="line">            &#x27;propagate&#x27;: False,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;swiftclient&#x27;: &#123;</span><br><span class="line">            &#x27;handlers&#x27;: [&#x27;console&#x27;],</span><br><span class="line">            &#x27;level&#x27;: &#x27;DEBUG&#x27;,</span><br><span class="line">            &#x27;propagate&#x27;: False,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;oslo_policy&#x27;: &#123;</span><br><span class="line">            &#x27;handlers&#x27;: [&#x27;console&#x27;],</span><br><span class="line">            &#x27;level&#x27;: &#x27;DEBUG&#x27;,</span><br><span class="line">            &#x27;propagate&#x27;: False,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;openstack_auth&#x27;: &#123;</span><br><span class="line">            &#x27;handlers&#x27;: [&#x27;console&#x27;],</span><br><span class="line">            &#x27;level&#x27;: &#x27;DEBUG&#x27;,</span><br><span class="line">            &#x27;propagate&#x27;: False,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;django&#x27;: &#123;</span><br><span class="line">            &#x27;handlers&#x27;: [&#x27;console&#x27;],</span><br><span class="line">            &#x27;level&#x27;: &#x27;DEBUG&#x27;,</span><br><span class="line">            &#x27;propagate&#x27;: False,</span><br><span class="line">        &#125;,</span><br><span class="line">        # Logging from django.db.backends is VERY verbose, send to null</span><br><span class="line">        # by default.</span><br><span class="line">        &#x27;django.db.backends&#x27;: &#123;</span><br><span class="line">            &#x27;handlers&#x27;: [&#x27;null&#x27;],</span><br><span class="line">            &#x27;propagate&#x27;: False,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;requests&#x27;: &#123;</span><br><span class="line">            &#x27;handlers&#x27;: [&#x27;null&#x27;],</span><br><span class="line">            &#x27;propagate&#x27;: False,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;urllib3&#x27;: &#123;</span><br><span class="line">            &#x27;handlers&#x27;: [&#x27;null&#x27;],</span><br><span class="line">            &#x27;propagate&#x27;: False,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;chardet.charsetprober&#x27;: &#123;</span><br><span class="line">            &#x27;handlers&#x27;: [&#x27;null&#x27;],</span><br><span class="line">            &#x27;propagate&#x27;: False,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;iso8601&#x27;: &#123;</span><br><span class="line">            &#x27;handlers&#x27;: [&#x27;null&#x27;],</span><br><span class="line">            &#x27;propagate&#x27;: False,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;scss&#x27;: &#123;</span><br><span class="line">            &#x27;handlers&#x27;: [&#x27;null&#x27;],</span><br><span class="line">            &#x27;propagate&#x27;: False,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="string">&#x27;direction&#x27;</span> should not be specified <span class="keyword">for</span> all_tcp/udp/icmp.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> It is specified <span class="keyword">in</span> the form.</span></span><br><span class="line">SECURITY_GROUP_RULES = &#123;</span><br><span class="line">    &#x27;all_tcp&#x27;: &#123;</span><br><span class="line">        &#x27;name&#x27;: _(&#x27;All TCP&#x27;),</span><br><span class="line">        &#x27;ip_protocol&#x27;: &#x27;tcp&#x27;,</span><br><span class="line">        &#x27;from_port&#x27;: &#x27;1&#x27;,</span><br><span class="line">        &#x27;to_port&#x27;: &#x27;65535&#x27;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x27;all_udp&#x27;: &#123;</span><br><span class="line">        &#x27;name&#x27;: _(&#x27;All UDP&#x27;),</span><br><span class="line">        &#x27;ip_protocol&#x27;: &#x27;udp&#x27;,</span><br><span class="line">        &#x27;from_port&#x27;: &#x27;1&#x27;,</span><br><span class="line">        &#x27;to_port&#x27;: &#x27;65535&#x27;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x27;all_icmp&#x27;: &#123;</span><br><span class="line">        &#x27;name&#x27;: _(&#x27;All ICMP&#x27;),</span><br><span class="line">        &#x27;ip_protocol&#x27;: &#x27;icmp&#x27;,</span><br><span class="line">        &#x27;from_port&#x27;: &#x27;-1&#x27;,</span><br><span class="line">        &#x27;to_port&#x27;: &#x27;-1&#x27;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x27;ssh&#x27;: &#123;</span><br><span class="line">        &#x27;name&#x27;: &#x27;SSH&#x27;,</span><br><span class="line">        &#x27;ip_protocol&#x27;: &#x27;tcp&#x27;,</span><br><span class="line">        &#x27;from_port&#x27;: &#x27;22&#x27;,</span><br><span class="line">        &#x27;to_port&#x27;: &#x27;22&#x27;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x27;smtp&#x27;: &#123;</span><br><span class="line">        &#x27;name&#x27;: &#x27;SMTP&#x27;,</span><br><span class="line">        &#x27;ip_protocol&#x27;: &#x27;tcp&#x27;,</span><br><span class="line">        &#x27;from_port&#x27;: &#x27;25&#x27;,</span><br><span class="line">        &#x27;to_port&#x27;: &#x27;25&#x27;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x27;dns&#x27;: &#123;</span><br><span class="line">        &#x27;name&#x27;: &#x27;DNS&#x27;,</span><br><span class="line">        &#x27;ip_protocol&#x27;: &#x27;tcp&#x27;,</span><br><span class="line">        &#x27;from_port&#x27;: &#x27;53&#x27;,</span><br><span class="line">        &#x27;to_port&#x27;: &#x27;53&#x27;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x27;http&#x27;: &#123;</span><br><span class="line">        &#x27;name&#x27;: &#x27;HTTP&#x27;,</span><br><span class="line">        &#x27;ip_protocol&#x27;: &#x27;tcp&#x27;,</span><br><span class="line">        &#x27;from_port&#x27;: &#x27;80&#x27;,</span><br><span class="line">        &#x27;to_port&#x27;: &#x27;80&#x27;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x27;pop3&#x27;: &#123;</span><br><span class="line">        &#x27;name&#x27;: &#x27;POP3&#x27;,</span><br><span class="line">        &#x27;ip_protocol&#x27;: &#x27;tcp&#x27;,</span><br><span class="line">        &#x27;from_port&#x27;: &#x27;110&#x27;,</span><br><span class="line">        &#x27;to_port&#x27;: &#x27;110&#x27;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x27;imap&#x27;: &#123;</span><br><span class="line">        &#x27;name&#x27;: &#x27;IMAP&#x27;,</span><br><span class="line">        &#x27;ip_protocol&#x27;: &#x27;tcp&#x27;,</span><br><span class="line">        &#x27;from_port&#x27;: &#x27;143&#x27;,</span><br><span class="line">        &#x27;to_port&#x27;: &#x27;143&#x27;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x27;ldap&#x27;: &#123;</span><br><span class="line">        &#x27;name&#x27;: &#x27;LDAP&#x27;,</span><br><span class="line">        &#x27;ip_protocol&#x27;: &#x27;tcp&#x27;,</span><br><span class="line">        &#x27;from_port&#x27;: &#x27;389&#x27;,</span><br><span class="line">        &#x27;to_port&#x27;: &#x27;389&#x27;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x27;https&#x27;: &#123;</span><br><span class="line">        &#x27;name&#x27;: &#x27;HTTPS&#x27;,</span><br><span class="line">        &#x27;ip_protocol&#x27;: &#x27;tcp&#x27;,</span><br><span class="line">        &#x27;from_port&#x27;: &#x27;443&#x27;,</span><br><span class="line">        &#x27;to_port&#x27;: &#x27;443&#x27;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x27;smtps&#x27;: &#123;</span><br><span class="line">        &#x27;name&#x27;: &#x27;SMTPS&#x27;,</span><br><span class="line">        &#x27;ip_protocol&#x27;: &#x27;tcp&#x27;,</span><br><span class="line">        &#x27;from_port&#x27;: &#x27;465&#x27;,</span><br><span class="line">        &#x27;to_port&#x27;: &#x27;465&#x27;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x27;imaps&#x27;: &#123;</span><br><span class="line">        &#x27;name&#x27;: &#x27;IMAPS&#x27;,</span><br><span class="line">        &#x27;ip_protocol&#x27;: &#x27;tcp&#x27;,</span><br><span class="line">        &#x27;from_port&#x27;: &#x27;993&#x27;,</span><br><span class="line">        &#x27;to_port&#x27;: &#x27;993&#x27;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x27;pop3s&#x27;: &#123;</span><br><span class="line">        &#x27;name&#x27;: &#x27;POP3S&#x27;,</span><br><span class="line">        &#x27;ip_protocol&#x27;: &#x27;tcp&#x27;,</span><br><span class="line">        &#x27;from_port&#x27;: &#x27;995&#x27;,</span><br><span class="line">        &#x27;to_port&#x27;: &#x27;995&#x27;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x27;ms_sql&#x27;: &#123;</span><br><span class="line">        &#x27;name&#x27;: &#x27;MS SQL&#x27;,</span><br><span class="line">        &#x27;ip_protocol&#x27;: &#x27;tcp&#x27;,</span><br><span class="line">        &#x27;from_port&#x27;: &#x27;1433&#x27;,</span><br><span class="line">        &#x27;to_port&#x27;: &#x27;1433&#x27;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x27;mysql&#x27;: &#123;</span><br><span class="line">        &#x27;name&#x27;: &#x27;MYSQL&#x27;,</span><br><span class="line">        &#x27;ip_protocol&#x27;: &#x27;tcp&#x27;,</span><br><span class="line">        &#x27;from_port&#x27;: &#x27;3306&#x27;,</span><br><span class="line">        &#x27;to_port&#x27;: &#x27;3306&#x27;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x27;rdp&#x27;: &#123;</span><br><span class="line">        &#x27;name&#x27;: &#x27;RDP&#x27;,</span><br><span class="line">        &#x27;ip_protocol&#x27;: &#x27;tcp&#x27;,</span><br><span class="line">        &#x27;from_port&#x27;: &#x27;3389&#x27;,</span><br><span class="line">        &#x27;to_port&#x27;: &#x27;3389&#x27;,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Help URL can be made available <span class="keyword">for</span> the client. To provide a <span class="built_in">help</span> URL, edit the</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> following attribute to the URL of your choice.</span></span><br><span class="line"><span class="meta">#</span><span class="bash">HORIZON_CONFIG[<span class="string">&quot;help_url&quot;</span>] = <span class="string">&quot;http://openstack.mycompany.org&quot;</span></span></span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
+<p>vim /etc/httpd/conf.d/openstack-dashboard.conf 增加如下代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WSGIApplicationGroup %&#123;GLOBAL</span><br></pre></td></tr></table></figure></li>
+<li><p>启动服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart httpd.service memcached.service</span><br></pre></td></tr></table></figure>
+<h1 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h1></li>
+</ol>
+<p><a target="_blank" rel="noopener" href="http://10.14.32.11/dashboard">http://10.14.32.11/dashboard</a>   账号admin  密码  ADMIN_PASS</p>
+<p>参考文档：</p>
+<p><a target="_blank" rel="noopener" href="https://docs.openstack.org/horizon/train/install/install-rdo.html">https://docs.openstack.org/horizon/train/install/install-rdo.html</a></p>
+<p><a target="_blank" rel="noopener" href="http://poweroff.cn/openstack/361.html">http://poweroff.cn/openstack/361.html</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>James
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://emg-sys.github.io/2021/02/01/OpenStack-Train-horizon%E5%AE%89%E8%A3%85-%E4%B8%83/" title="OpenStack-Train-horizon安装-(七)">http://emg-sys.github.io/2021/02/01/OpenStack-Train-horizon安装-七/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/02/01/OpenStack-Train-neutron%E6%8E%A7%E5%88%B6%E8%8A%82%E7%82%B9%E5%AE%89%E8%A3%85-%E5%85%AD/" rel="prev" title="OpenStack-Train-neutron控制节点安装-(六)">
+      <i class="fa fa-chevron-left"></i> OpenStack-Train-neutron控制节点安装-(六)
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E5%8C%85"><span class="nav-number">2.</span> <span class="nav-text">安装软件包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-number">3.</span> <span class="nav-text">验证</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">James</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/emg-sys" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;emg-sys" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:mlxwlgcs@163.com" title="E-Mail → mailto:mlxwlgcs@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">James</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">35k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">32 分钟</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
