@@ -1,6 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>OpenStack-Train认证keystone服务安装(二)</title>
+    <url>/2021/01/29/OpenStack-Train%E8%AE%A4%E8%AF%81keystone%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85-%E4%BA%8C/</url>
+    <content><![CDATA[<h1 id="keystone的两大功能"><a href="#keystone的两大功能" class="headerlink" title="keystone的两大功能"></a>keystone的两大功能</h1><ol>
+<li><p>用户认证</p>
+<p>用户认证相关：<br>user： 用户<br>project：项目（以前叫租户）<br>token: 令牌，认证成功了分配一个令牌<br>role： 角色</p>
+</li>
+</ol>
+<a id="more"></a>
+
+<ol start="2">
+<li><p>服务目录</p>
+<p>service：服务<br>endpoint： 端点，服务对应的 URL。每个服务都有 3 个 URL：<br>public url 可以全局访问<br>internal url 只能被局域网访问，openstack 服务之间访问<br>admin url 从常规的访问分离出来，只能 admin 使用。</p>
+</li>
+</ol>
+<h1 id="创库授权"><a href="#创库授权" class="headerlink" title="创库授权"></a>创库授权</h1><ol>
+<li><p>创建数据库及授予keystone数据库的适当访问权限</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mysql</span><br><span class="line">CREATE DATABASE keystone;</span><br><span class="line">GRANT ALL PRIVILEGES ON keystone.* TO &#x27;keystone&#x27;@&#x27;localhost&#x27; \</span><br><span class="line">IDENTIFIED BY &#x27;KEYSTONE_DBPASS&#x27;;</span><br><span class="line">GRANT ALL PRIVILEGES ON keystone.* TO &#x27;keystone&#x27;@&#x27;%&#x27; \</span><br><span class="line">IDENTIFIED BY &#x27;KEYSTONE_DBPASS&#x27;;</span><br></pre></td></tr></table></figure></li>
+<li><p>安装keystone服务相关软件包</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install openstack-keystone httpd mod_wsgi -y</span><br></pre></td></tr></table></figure></li>
+<li><p>修改配置文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt;&#x2F;etc&#x2F;keystone&#x2F;keystone.conf&lt;&lt;eof</span><br><span class="line">[DEFAULT]</span><br><span class="line">[application_credential]</span><br><span class="line">[assignment]</span><br><span class="line">[auth]</span><br><span class="line">[cache]</span><br><span class="line">[catalog]</span><br><span class="line">[cors]</span><br><span class="line">[credential]</span><br><span class="line">[database]</span><br><span class="line">connection &#x3D; mysql+pymysql:&#x2F;&#x2F;keystone:KEYSTONE_DBPASS@controller&#x2F;keystone </span><br><span class="line">[domain_config]</span><br><span class="line">[endpoint_filter]</span><br><span class="line">[endpoint_policy]</span><br><span class="line">[eventlet_server]</span><br><span class="line">[federation]</span><br><span class="line">[fernet_receipts]</span><br><span class="line">[fernet_tokens]</span><br><span class="line">[healthcheck]</span><br><span class="line">[identity]</span><br><span class="line">[identity_mapping]</span><br><span class="line">[jwt_tokens]</span><br><span class="line">[ldap]</span><br><span class="line">[memcache]</span><br><span class="line">servers &#x3D; controller:11211</span><br><span class="line">[oauth1]</span><br><span class="line">[oslo_messaging_amqp]</span><br><span class="line">[oslo_messaging_kafka]</span><br><span class="line">[oslo_messaging_notifications]</span><br><span class="line">[oslo_messaging_rabbit]</span><br><span class="line">[oslo_middleware]</span><br><span class="line">[oslo_policy]</span><br><span class="line">[policy]</span><br><span class="line">[profiler]</span><br><span class="line">[receipt]</span><br><span class="line">[resource]</span><br><span class="line">[revoke]</span><br><span class="line">[role]</span><br><span class="line">[saml]</span><br><span class="line">[security_compliance]</span><br><span class="line">[shadow_users]</span><br><span class="line">[token]</span><br><span class="line">provider &#x3D; fernet</span><br><span class="line">[tokenless_auth]</span><br><span class="line">[totp]</span><br><span class="line">[trust]</span><br><span class="line">[unified_limit]</span><br><span class="line">[wsgi]</span><br><span class="line">eof</span><br></pre></td></tr></table></figure></li>
+<li><p>初始化数据库</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">su -s &#x2F;bin&#x2F;sh -c &quot;keystone-manage db_sync&quot; keystone</span><br></pre></td></tr></table></figure></li>
+<li><p>初始化Fernet-key密钥存储库</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone</span><br><span class="line">keystone-manage credential_setup --keystone-user keystone --keystone-group keystone</span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>引导身份服务</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">keystone-manage bootstrap --bootstrap-password ADMIN_PASS \</span><br><span class="line">  --bootstrap-admin-url http://controller:5000/v3/ \</span><br><span class="line">  --bootstrap-internal-url http://controller:5000/v3/ \</span><br><span class="line">  --bootstrap-public-url http://controller:5000/v3/ \</span><br><span class="line">  --bootstrap-region-id RegionOne</span><br></pre></td></tr></table></figure></li>
+<li><p>配置Apche httpd服务</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sed -i &quot;s&#x2F;#ServerName www.example.com:80&#x2F;ServerName controller&#x2F;&quot; &#x2F;etc&#x2F;httpd&#x2F;conf&#x2F;httpd.conf</span><br></pre></td></tr></table></figure></li>
+<li><p>配置软连接</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ln -s /usr/share/keystone/wsgi-keystone.conf /etc/httpd/conf.d/</span><br></pre></td></tr></table></figure></li>
+<li><p>启动http服务</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl enable httpd &amp;&amp; systemctl start httpd</span><br><span class="line">netstat -auntlp|grep 5000</span><br></pre></td></tr></table></figure></li>
+<li><p>创建环境变量</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt;.bashrc&lt;&lt;eof</span><br><span class="line">export OS_USERNAME&#x3D;admin </span><br><span class="line">export OS_PASSWORD&#x3D;ADMIN_PASS</span><br><span class="line">export OS_PROJECT_NAME&#x3D;admin</span><br><span class="line">export OS_USER_DOMAIN_NAME&#x3D;Default</span><br><span class="line">export OS_PROJECT_DOMAIN_NAME&#x3D;Default</span><br><span class="line">export OS_AUTH_URL&#x3D;http:&#x2F;&#x2F;controller:5000&#x2F;v3</span><br><span class="line">export OS_IDENTITY_API_VERSION&#x3D;3</span><br><span class="line">export OS_IMAGE_API_VERSION&#x3D;2</span><br><span class="line">eof</span><br></pre></td></tr></table></figure></li>
+<li><p>验证：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openstack service list</span><br><span class="line">openstack endpoint list</span><br></pre></td></tr></table></figure>
+<p><img src="/_posts/'../images/OpenStack-Train%E8%AE%A4%E8%AF%81keystone%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85-%E4%BA%8C'/image-20210129174824518.png" alt="image-20210129174824518"></p>
+</li>
+<li><p>创建域</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openstack domain create --description &quot;An Example Domain&quot; example</span><br></pre></td></tr></table></figure></li>
+<li><p>创建service项目、myuser用户</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openstack project create --domain default \</span><br><span class="line">  --description &quot;Service Project&quot; service</span><br><span class="line">openstack project create --domain default --description &quot;Demo Project&quot; myproject</span><br><span class="line">openstack user create --domain default --password MYUSER_PASS myuser</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>创建普通用户角色（区别于admin用户）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openstack role create myrole</span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>将myrole角色添加到myproject项目和myuser用户</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openstack role add --project myproject --user myuser myrole</span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>查看权限分配</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">openstack user list</span><br><span class="line">openstack role list</span><br><span class="line">openstack project list</span><br><span class="line">openstack role assignment list</span><br></pre></td></tr></table></figure>
+
+
+
+
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>openstack</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>OpenStack-Train镜像glance服务安装-(三)</title>
+    <url>/2021/02/01/OpenStack-Train%E9%95%9C%E5%83%8Fglance%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85-%E4%B8%89/</url>
+    <content><![CDATA[<h1 id="创建数据库授权"><a href="#创建数据库授权" class="headerlink" title="创建数据库授权"></a>创建数据库授权</h1><p>本章节描述的是在控制节点如何安装镜像服务，这个配置采用本地硬盘存储镜像</p>
+<a id="more"></a>
+
+<ol>
+<li><p>创建数据库表</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br><span class="line">CREATE DATABASE glance;</span><br><span class="line">GRANT ALL PRIVILEGES ON glance.* TO &#x27;glance&#x27;@&#x27;localhost&#x27; \</span><br><span class="line">  IDENTIFIED BY &#x27;GLANCE_DBPASS&#x27;;</span><br><span class="line">GRANT ALL PRIVILEGES ON glance.* TO &#x27;glance&#x27;@&#x27;%&#x27; \</span><br><span class="line">  IDENTIFIED BY &#x27;GLANCE_DBPASS&#x27;;</span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>在keystone创建glance用户关联角色</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openstack user create --domain default --password-prompt GLANCE_DBPASS</span><br></pre></td></tr></table></figure>
+<p>将glance用户加入service项目授予admin角色</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openstack role add --project service --user glance admin</span><br></pre></td></tr></table></figure>
+<p>在keystone上创建服务实体和注册api</p>
+<p>创建glance服务实体</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openstack service create --name glance \</span><br><span class="line">  --description &quot;OpenStack Image&quot; image</span><br></pre></td></tr></table></figure></li>
+<li><p>创建镜像服务api端点</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">openstack endpoint create --region RegionOne \</span><br><span class="line"> image public http://controller:9292;</span><br><span class="line">openstack endpoint create --region RegionOne \</span><br><span class="line"> image internal http://controller:9292;</span><br><span class="line">openstack endpoint create --region RegionOne \</span><br><span class="line"> image admin http://controller:9292;</span><br><span class="line">   </span><br></pre></td></tr></table></figure>
+<h1 id="安装服务和相应软件包"><a href="#安装服务和相应软件包" class="headerlink" title="安装服务和相应软件包"></a>安装服务和相应软件包</h1></li>
+<li><p>安装软件包</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum install openstack-glance -y</span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>修改配置文件</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cp /etc/glance/glance-api.conf&#123;,.bak&#125;;</span><br><span class="line">grep &#x27;^[a-Z\[]&#x27; /etc/glance/glance-api.conf.bak &gt;/etc/glance/glance-api.conf;</span><br><span class="line">cat &gt;&gt;/etc/glance/glance-api.conf&lt;&lt;eof</span><br><span class="line">[DEFAULT]</span><br><span class="line">[cinder]</span><br><span class="line">[cors]</span><br><span class="line">[database]</span><br><span class="line">connection = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance</span><br><span class="line">[file]</span><br><span class="line">[glance.store.http.store]</span><br><span class="line">[glance.store.rbd.store]</span><br><span class="line">[glance.store.sheepdog.store]</span><br><span class="line">[glance.store.swift.store]</span><br><span class="line">[glance.store.vmware_datastore.store]</span><br><span class="line">[glance_store]</span><br><span class="line">stores = file,http</span><br><span class="line">default_store = file</span><br><span class="line">filesystem_store_datadir = /Data/servers/glance/images/</span><br><span class="line">[image_format]</span><br><span class="line">[keystone_authtoken]</span><br><span class="line">www_authenticate_uri  = http://controller:5000</span><br><span class="line">auth_url = http://controller:5000</span><br><span class="line">memcached_servers = controller:11211</span><br><span class="line">auth_type = password</span><br><span class="line">project_domain_name = Default</span><br><span class="line">user_domain_name = Default</span><br><span class="line">project_name = service</span><br><span class="line">username = glance</span><br><span class="line">password = GLANCE_DBPASS</span><br><span class="line">[oslo_concurrency]</span><br><span class="line">[oslo_messaging_amqp]</span><br><span class="line">[oslo_messaging_kafka]</span><br><span class="line">[oslo_messaging_notifications]</span><br><span class="line">[oslo_messaging_rabbit]</span><br><span class="line">[oslo_middleware]</span><br><span class="line">[oslo_policy]</span><br><span class="line">[paste_deploy]</span><br><span class="line">flavor = keystone</span><br><span class="line">[profiler]</span><br><span class="line">[store_type_location_strategy]</span><br><span class="line">[task]</span><br><span class="line">[taskflow_executor]</span><br><span class="line">eof</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>同步数据库并验证</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">su -s &#x2F;bin&#x2F;sh -c &quot;glance-manage db_sync&quot; glance;</span><br><span class="line">mysql glance -e &quot;show tables&quot;;</span><br></pre></td></tr></table></figure></li>
+<li><p>启动服务并设置为开机启动</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl enable openstack-glance-api.service</span><br><span class="line">systemctl start openstack-glance-api.service</span><br></pre></td></tr></table></figure>
+<h1 id="验证操作"><a href="#验证操作" class="headerlink" title="验证操作"></a>验证操作</h1></li>
+<li><p>下载镜像,上传cirros-0.3.4-x86_64-disk.img镜像</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">wget http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.imgc</span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>上传镜像</p>
+<p># 执行命令上传镜像<br># 使用qcow2格式上传，bare容器格式上传到镜像服务<br># 设置公共可见，这样所所有的项目都可以访问</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">glance image-create --name &quot;cirros&quot; \</span><br><span class="line">  --file cirros-0.4.0-x86_64-disk.img \</span><br><span class="line">  --disk-format qcow2 --container-format bare \</span><br><span class="line">  --visibility public</span><br></pre></td></tr></table></figure>
+<p>验证上传镜像</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openstack  image list</span><br></pre></td></tr></table></figure>
+<p><img src="/images/OpenStack-Train%E9%95%9C%E5%83%8Fglance%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85-%E4%B8%89/image-20210201105609772.png" alt="image-20210201105609772"></p>
+</li>
+</ol>
+<p>参考文档：</p>
+<p><a href="https://docs.openstack.org/glance/train/install/install-obs.html#prerequisites">https://docs.openstack.org/glance/train/install/install-obs.html#prerequisites</a></p>
+<p><a href="http://poweroff.cn/openstack/357.html">http://poweroff.cn/openstack/357.html</a></p>
+]]></content>
+  </entry>
+  <entry>
     <title>openstack train 安装环境准备</title>
     <url>/2021/01/26/openstack-train-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/</url>
     <content><![CDATA[<h1 id="服务器规划"><a href="#服务器规划" class="headerlink" title="服务器规划"></a>服务器规划</h1><p>​    本次测试环境采用3台DELL物理机进行安装部署，管理vlan 33,业务vlan 11,服务器业务网卡不配置ip地址,采用provider vlan网络(通俗来讲就是网关在物理设备上面)  </p>
