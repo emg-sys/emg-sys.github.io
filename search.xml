@@ -504,7 +504,7 @@
 <h1 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h1></li>
 </ol>
 <p>登陆dashboard，管理员–&gt;计算–&gt;虚拟机管理器</p>
-<p>如果已注册成功，在”虚拟机管理器”标签下可发现计算节点，并能展示出各计算节点的资源；如果未注册或注册失败，则”虚拟机管理器”标签下无主机。</p>
+<p>如果已注册成功，在”虚拟机管理器”标签下可发现计算节点，并能展示出各计算节点的资源；如果未注册或注册失败，则”虚拟机管理器”标签下无主机。此界面显示的是逻辑核数，不是超分后的资源</p>
 <p><img src="/images/OpenStack-Train-nova%E8%AE%A1%E7%AE%97%E8%8A%82%E7%82%B9%E5%AE%89%E8%A3%85-%E5%85%AB/image-20210201161338196.png" alt="image-20210201161338196"></p>
 <p>参考文档:</p>
 <p><a href="https://docs.openstack.org/nova/train/install/compute-install-rdo.html#install-and-configure-components">https://docs.openstack.org/nova/train/install/compute-install-rdo.html#install-and-configure-components</a></p>
@@ -514,5 +514,31 @@
       <categories>
         <category>openstack</category>
       </categories>
+  </entry>
+  <entry>
+    <title>OpenStack-Train-neutron-创建网络及子网-(九)</title>
+    <url>/2021/02/01/OpenStack-Train-neutron-%E5%88%9B%E5%BB%BA%E7%BD%91%E7%BB%9C%E5%8F%8A%E5%AD%90%E7%BD%91-%E4%B9%9D/</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>前面open stack基本环境已经搭建完毕，本章将介绍如何创建网络及子网，由于使用provider网络，租户无法创建自己的网路，网络需要管理admin创建.</p>
+<a id="more"></a>
+
+
+
+<h1 id="登录控制台"><a href="#登录控制台" class="headerlink" title="登录控制台"></a>登录控制台</h1><ol>
+<li>控制台地址</li>
+</ol>
+<p><a href="http://10.14.32.11/dashboard/admin/networks/">http://10.14.32.11/dashboard/admin/networks/</a>     admin   ADMIN_PASS</p>
+<ol start="2">
+<li><p>一次点击管理员-网络-创建网络</p>
+<p><img src="/images/OpenStack-Train-neutron-%E5%88%9B%E5%BB%BA%E7%BD%91%E7%BB%9C%E5%8F%8A%E5%AD%90%E7%BD%91-%E4%B9%9D/image-20210201171003832.png" alt="image-20210201171003832"></p>
+</li>
+<li><p>查看创建的网络</p>
+<p><img src="/images/OpenStack-Train-neutron-%E5%88%9B%E5%BB%BA%E7%BD%91%E7%BB%9C%E5%8F%8A%E5%AD%90%E7%BD%91-%E4%B9%9D/image-20210201171035420.png" alt="image-20210201171035420"></p>
+</li>
+<li><p>创建子网，点击已经创建成功的网络，进入点击“创建子网”</p>
+<p><img src="/images/OpenStack-Train-neutron-%E5%88%9B%E5%BB%BA%E7%BD%91%E7%BB%9C%E5%8F%8A%E5%AD%90%E7%BD%91-%E4%B9%9D/image-20210201171307816.png" alt="image-20210201171307816"></p>
+</li>
+</ol>
+<p>至此网络已经创建成功，下一章将制作镜像测试启动实例.</p>
+]]></content>
   </entry>
 </search>
