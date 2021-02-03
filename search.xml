@@ -633,6 +633,57 @@
   <entry>
     <title>Docker搭建svn服务器</title>
     <url>/2021/02/03/Docker%E6%90%AD%E5%BB%BAsvn%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1>]]></content>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文中是基于dcoker镜像elleflorio/svn-server进行部署,包含数据全备、增量备份等</p>
+<a id="more"></a>
+
+<h1 id="宿主机创建相关目录"><a href="#宿主机创建相关目录" class="headerlink" title="宿主机创建相关目录"></a>宿主机创建相关目录</h1><ol>
+<li><p>创建目录</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir &#x2F;Data&#x2F;&#x2F;svnserver&#x2F;svnconfig -p</span><br><span class="line">chown -R 777 &#x2F;Data&#x2F;svnserver&#x2F;</span><br></pre></td></tr></table></figure>
+<p>创建放svn配置及仓库的目录</p>
+<p>仓库给予权限为777，否则在svnadmin无法创建目录</p>
+</li>
+<li><p>拉取最新镜像</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker pull elleflorio&#x2F;svn-server</span><br></pre></td></tr></table></figure></li>
+<li><p>运行容器</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run --privileged&#x3D;true -d --name svn-server -p 8011:80 -p 3690:3690 -v elleflorio&#x2F;svn-server</span><br></pre></td></tr></table></figure></li>
+<li><p>复制容器中SVN配置文件至宿主机</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker cp svn-server:&#x2F;etc&#x2F;subversion &#x2F;Data&#x2F;svnserver&#x2F;svnconfig&#x2F;</span><br></pre></td></tr></table></figure></li>
+<li><p>停止并移除容器</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker stop svn-server</span><br><span class="line">docker rm svn-server</span><br></pre></td></tr></table></figure></li>
+<li><p>运行容器并挂载配置及SVN目录</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run --privileged&#x3D;true -d --name svn-server -p 8000:80 -p 3690:3690   -v &#x2F;Data&#x2F;svnserver:&#x2F;home&#x2F;svn   -v &#x2F;Data&#x2F;svnserver&#x2F;svnconfig&#x2F;subversion-access-control:&#x2F;etc&#x2F;subversion&#x2F;subversion-access-control    -v &#x2F;Data&#x2F;svnserver&#x2F;svnconfig&#x2F;passwd:&#x2F;etc&#x2F;subversion&#x2F;passwd    elleflorio&#x2F;svn-server </span><br></pre></td></tr></table></figure></li>
+<li><p>配置svnadmin配置svn用户授权路径</p>
+<p><a href="http://172.30.95.101:8000/">http://172.30.95.101:8000</a></p>
+<p><img src="/images/Docker%E6%90%AD%E5%BB%BAsvn%E6%9C%8D%E5%8A%A1%E5%99%A8/image-20210203155316530.png" alt="image-20210203155316530"></p>
+<ol start="8">
+<li><p>配置认证文件及命令执行路径</p>
+<p><img src="/images/Docker%E6%90%AD%E5%BB%BAsvn%E6%9C%8D%E5%8A%A1%E5%99%A8/image-20210203160820008.png" alt="image-20210203160820008"></p>
+</li>
+</ol>
+</li>
+</ol>
+<p>​       点击保存后，会默认创建admin/admin用户，进入界面后可修改admin的默认密码。</p>
+<h1 id="数据备份"><a href="#数据备份" class="headerlink" title="数据备份"></a>数据备份</h1><ol>
+<li><p>全备数据脚本</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt;svn-backup.sh&lt;&lt;eof</span><br><span class="line">#!&#x2F;bin&#x2F;bash</span><br><span class="line">repos_path&#x3D;&quot;&#x2F;home&#x2F;svn&#x2F;filesystem&#x2F;&quot;</span><br><span class="line">back_path&#x3D;&quot;&#x2F;home&#x2F;svn&#x2F;backup&#x2F;svn&quot;</span><br><span class="line">Date&#x3D;&#96;date +%Y%m%d&#96;</span><br><span class="line">cd $back_path</span><br><span class="line">echo &#96;date&#96; &gt;&gt; $back_path&#x2F;svn_backup.log</span><br><span class="line">youngest&#x3D;&#96;svnlook youngest $repos_path&#96;</span><br><span class="line"></span><br><span class="line">svnadmin dump --revision 0:$youngest $repos_path|gzip &gt; $back_path&#x2F;filesystem-bak-full.$Date.gz</span><br><span class="line">if [ $? -eq 0 ];</span><br><span class="line">then</span><br><span class="line">echo &quot;$Date filesystem Full amount of backup success&quot; &gt;&gt; $back_path&#x2F;svn_backup.log</span><br><span class="line">else </span><br><span class="line">echo &quot;$Date filesystem Full amount of backup failed&quot; &gt;&gt; $back_path&#x2F;svn_backup.log</span><br><span class="line">fi</span><br><span class="line">echo $youngest &gt; $back_path&#x2F;youngest_revision</span><br><span class="line">##upload remote server                                 </span><br><span class="line">scp $back_path&#x2F;filesystem-bak-full.$Date.gz  172.30.95.102:&#x2F;Data&#x2F;backup&#x2F;svn&#x2F;</span><br><span class="line">                                                                                                  </span><br><span class="line">##delete backup                                                                                   </span><br><span class="line">find $backup_path -type f -mtime +3  -exec rm -rf &#123;&#125; \; </span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
+<p>脚本中通过scp 把备份文件远程拷贝到172.30.95.102，请自行配置ssh互信，本地全备备份文件保留3天时间</p>
+</li>
+<li><p>增量备份脚本</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt;svn-backup-inc.sh&lt;&lt;eof</span><br><span class="line">#!&#x2F;bin&#x2F;bash</span><br><span class="line">repos_path&#x3D;&quot;&#x2F;home&#x2F;svn&#x2F;filesystem&quot;</span><br><span class="line">Date&#x3D;&#96;date +%Y%m%d&#96;</span><br><span class="line">backup_path&#x3D;&quot;&#x2F;home&#x2F;svn&#x2F;backup&#x2F;svn&quot;</span><br><span class="line">echo &#96;date&#96; &gt;&gt; $backup_path&#x2F;svn_backup.log</span><br><span class="line">pre_youngest&#x3D;&#96;cat $backup_path&#x2F;youngest_revision&#96;</span><br><span class="line">youngest&#x3D;&#96;svnlook youngest $repos_path&#96;</span><br><span class="line"></span><br><span class="line">if [ $pre_youngest -eq $youngest ]</span><br><span class="line">then</span><br><span class="line">        echo &quot;filesystem has no new revisions to backup.&quot; &gt;&gt; $backup_path&#x2F;svn_backup.log</span><br><span class="line">continue</span><br><span class="line">fi</span><br><span class="line">first_youngest&#x3D;$(($pre_youngest+1))</span><br><span class="line"></span><br><span class="line">svnadmin dump  --incremental  --revision $first_youngest:$youngest $repos_path| gzip &gt; $backup_path&#x2F;filesystem.inc-$first_youngest-$youngest.$Date.gz</span><br><span class="line">if [ $? -eq 0 ];</span><br><span class="line">then</span><br><span class="line">        echo &quot;$Date filesystem backup success&quot;</span><br><span class="line">else</span><br><span class="line">        echo &quot;$Date filesystem backup failed&quot;</span><br><span class="line">fi</span><br><span class="line">echo $youngest &gt; $backup_path&#x2F;youngest_revision</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">##upload remote server</span><br><span class="line">scp $backup_path&#x2F;filesystem.inc-$first_youngest-$youngest.$Date.gz 172.30.95.102:&#x2F;Data&#x2F;backup&#x2F;svn&#x2F;</span><br><span class="line"></span><br><span class="line">##delete backup</span><br><span class="line">find $backup_path -type f -mtime +7  -exec rm -rf &#123;&#125; \;</span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
+<p>脚本中通过scp 把备份文件远程拷贝到172.30.95.102，请自行配置ssh互信，本地增量备份文件保留7天时间</p>
+</li>
+<li><p>配置定时任务</p>
+<p>docker镜像默认没有启动定时任务服务器，需要手动启动，手动启动，手动启动!</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker exec -it svn-server &#x2F;bin&#x2F;sh</span><br><span class="line">crond</span><br><span class="line">crontab -e</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><img src="/images/Docker%E6%90%AD%E5%BB%BAsvn%E6%9C%8D%E5%8A%A1%E5%99%A8/image-20210203164000736.png" alt="image-20210203164000736"></p>
+</li>
+</ol>
+<p>​            每周六全备，周日-周五增量备份</p>
+<p>参考文档:</p>
+<p><a href="https://blog.csdn.net/qq_25568881/article/details/103753005">https://blog.csdn.net/qq_25568881/article/details/103753005</a></p>
+]]></content>
+      <categories>
+        <category>svn</category>
+      </categories>
   </entry>
 </search>
