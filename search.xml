@@ -528,7 +528,7 @@
 </ol>
 <p><a href="http://10.14.32.11/dashboard/admin/networks/">http://10.14.32.11/dashboard/admin/networks/</a>     admin   ADMIN_PASS</p>
 <ol start="2">
-<li><p>一次点击管理员-网络-创建网络</p>
+<li><p>依次点击管理员-网络-创建网络</p>
 <p><img src="/images/OpenStack-Train-neutron-%E5%88%9B%E5%BB%BA%E7%BD%91%E7%BB%9C%E5%8F%8A%E5%AD%90%E7%BD%91-%E4%B9%9D/image-20210201171003832.png" alt="image-20210201171003832"></p>
 </li>
 <li><p>查看创建的网络</p>
@@ -539,6 +539,95 @@
 </li>
 </ol>
 <p>至此网络已经创建成功，下一章将制作镜像测试启动实例.</p>
+]]></content>
+      <categories>
+        <category>openstack</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Docker搭建FTP服务器</title>
+    <url>/2021/02/02/Docker%E6%90%AD%E5%BB%BAFTP%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>docker 安装ftp服务，大大节省了部署时间</p>
+<a id="more"></a>
+
+
+
+<ol>
+<li><p>寻找vsftpd的镜像 ，找到星星最多的</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker search vsftpd</span><br></pre></td></tr></table></figure></li>
+<li><p>拉取镜像</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker pull fauria&#x2F;vsftpd</span><br></pre></td></tr></table></figure></li>
+<li><p>查看本地镜像</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure></li>
+<li><p>运行容器</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run -d  -p 21:21 -p 20:20 -p 21100-21110:21100-21110 -v &#x2F;Data&#x2F;Ftpfile:&#x2F;home&#x2F;vsftpd  -e FTP_USER&#x3D;ftp_user1 -e FTP_PASS&#x3D;D#5O2fr6JfK1 -e REVERSE_LOOKUP_ENABLE&#x3D;NO -e PASV_ADDRESS&#x3D;172.30.95.101 -e PASV_MIN_PORT&#x3D;21100 -e PASV_MAX_PORT&#x3D;21110 --name ftpserver --restart&#x3D;always fauria&#x2F;vsftpd </span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#-p 进行端口绑定映射</span><br><span class="line">#-v 添加容器数据卷</span><br><span class="line">#-e FTP_USER&#x3D;moti -e FTP_PASS&#x3D;moti 添加一个初始化用户moti</span><br><span class="line">#PASV_MIN_PORT和PASV_MAX_PORT映射的是被动模式下端口使用范围</span><br><span class="line">#-name vsftpd 为容器命名为vsftpd </span><br><span class="line">#--restart&#x3D;always fauria&#x2F;vsftpd docker重启的时候自动启动这个容器</span><br></pre></td></tr></table></figure></li>
+<li><p>完善ftp配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 我们先进入container里面 </span><br><span class="line">docker exec -i -t vsftpd bash </span><br><span class="line"></span><br><span class="line"># 修改并生成虚拟用户模式下的用户db文件，向文件中最后两行写入用户名和密码</span><br><span class="line">vi &#x2F;etc&#x2F;vsftpd&#x2F;virtual_users.txt</span><br><span class="line"></span><br><span class="line">#假如我们添加了molihub用户，我们需要建立对应用户的文件夹</span><br><span class="line">mkdir &#x2F;home&#x2F;vsftpd&#x2F;molihub</span><br><span class="line"></span><br><span class="line">#把登录的验证信息写入数据库 </span><br><span class="line">&#x2F;usr&#x2F;bin&#x2F;db_load -T -t hash -f &#x2F;etc&#x2F;vsftpd&#x2F;virtual_users.txt &#x2F;etc&#x2F;vsftpd&#x2F;virtual_users.db</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>注意： 执行docker restart ftpserver 会把vsftpd.conf内容重新追加一份到/etc/vsftpd/vsftpd.conf。通过工具上传文件，浏览器访问<a href="ftp://x.x.x.x/">ftp://x.x.x.x</a> 出现中文乱码，此时需要修改工具的字符集关闭UTF-8即可</p>
+</li>
+</ol>
+<p>参考文档:</p>
+<p><a href="https://github.com/fauria/docker-vsftpd/blob/master/run-vsftpd.sh">https://github.com/fauria/docker-vsftpd/blob/master/run-vsftpd.sh</a></p>
+]]></content>
+      <categories>
+        <category>ftp</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>OpenStack-Train制作镜像模板-(十)</title>
+    <url>/2021/02/01/OpenStack-Train%E5%88%B6%E4%BD%9C%E9%95%9C%E5%83%8F%E6%A8%A1%E6%9D%BF-%E5%8D%81/</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本章介绍如何制作安全镜像，通过cloud-init脚本初始化镜像参数</p>
+<a id="more"></a>
+
+<h1 id="基础设置"><a href="#基础设置" class="headerlink" title="基础设置"></a>基础设置</h1><p>在制作镜像之前需要一个纯净的操作系统</p>
+<ol>
+<li><p>安装基础软件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install unzip wget lrzsz net-tools ntp vim -y</span><br></pre></td></tr></table></figure></li>
+<li><p>安装kvm软件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install qemu-kvm libvirt libguestfs-tools virt-install virt-manager libvirt-python上传iso镜像</span><br></pre></td></tr></table></figure></li>
+<li><p>启动libvirtd服务</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl start libvirtd.service</span><br><span class="line">systemctl status libvirtd.service</span><br></pre></td></tr></table></figure></li>
+<li><p>调用kvm图形创建虚机</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">qemu-img create -f qcow2 CENTOS_7.6_S_64_X_20_X.qcow2 20G</span><br><span class="line">virt-install --virt-type kvm --name centos7-template --ram 4096  --cdrom=/usr/local/src/CentOS-7.6-x86_64-bin-DVD.iso  --disk /usr/local/src/CENTOS_7.6_S_64_X_20_X.qcow2,format=qcow2,device=disk,bus=virtio  --network network=default,model=virtio  --graphics vnc,listen=0.0.0.0 --noautoconsole  --os-type=linux </span><br></pre></td></tr></table></figure>
+<p>–virt-type kvm 虚拟化的类型(不写此参数默认为qemu)<br>–os-type=linux 系统类型<br>–os-variant rhel7 系统版本<br>–name centos7 虚拟机的名字<br>–memory 1024 虚拟机的内存<br>–vcpus 1 虚拟cpu的核数 –disk /opt/centos01.raw,format=raw,size=10<br>–cdrom /opt/CentOS-7-x86_64-DVD-1708.iso 系统镜像<br>–network network=default 使用默认桥接的网络<br>–graphics vnc,listen=0.0.0.0<br>–noautoconsole</p>
+</li>
+</ol>
+<h1 id="定制操作系统"><a href="#定制操作系统" class="headerlink" title="定制操作系统"></a>定制操作系统</h1><ol>
+<li><p>需要手动启动操作系统</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">virsh list --all</span><br><span class="line">virsh start centos7-template</span><br></pre></td></tr></table></figure></li>
+<li><p>配置系统服务</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl stop firewalld</span><br><span class="line">systemctl disable firewalld</span><br><span class="line">systemctl stop NetworkManager</span><br><span class="line">systemctl disable NetworkManager</span><br><span class="line">yum install unzip wget lrzsz net-tools vim -y</span><br></pre></td></tr></table></figure></li>
+<li><p>配置网络环境</p>
+<p>vim /etc/sysconfig/network-scripts/ifcfg-eth0 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">BOOTPROTO&#x3D;dhcp</span><br><span class="line">DEVICE&#x3D;eth0</span><br><span class="line">ONBOOT&#x3D;yes</span><br></pre></td></tr></table></figure></li>
+<li><p>优化sshd</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">UseDNS no</span><br></pre></td></tr></table></figure>
+<p>重启sshd服务</p>
+</li>
+<li><p>更换yum源</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mv &#x2F;etc&#x2F;yum.repos.d&#x2F;CentOS-Base.repo &#x2F;etc&#x2F;yum.repos.d&#x2F;CentOS-Base.repo.backup</span><br><span class="line">wget -O &#x2F;etc&#x2F;yum.repos.d&#x2F;CentOS-Base.repo https:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;repo&#x2F;Centos-7.repo</span><br><span class="line">wget -O &#x2F;etc&#x2F;yum.repos.d&#x2F;epel.repo http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;repo&#x2F;epel-7.repo</span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>安装cloud-init 软件，用于初始化实例</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum -y install cloud-int</span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>通过cloud-int 初始化系统</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt;&#x2F;etc&#x2F;cloud&#x2F;cloud.cfg&lt;&lt;eof</span><br><span class="line">users:</span><br><span class="line"> - default</span><br><span class="line"></span><br><span class="line">disable_root: 1</span><br><span class="line">ssh_pwauth:   1</span><br><span class="line">chpasswd: &#123;expire: False&#125;</span><br><span class="line"></span><br><span class="line">mount_default_fields: [~, ~, &#39;auto&#39;, &#39;defaults,nofail,x-systemd.requires&#x3D;cloud-init.service&#39;, &#39;0&#39;, &#39;2&#39;]</span><br><span class="line">resize_rootfs_tmp: &#x2F;dev</span><br><span class="line">ssh_deletekeys:   0</span><br><span class="line">ssh_genkeytypes:  ~</span><br><span class="line">syslog_fix_perms: ~</span><br><span class="line">disable_vmware_customization: false</span><br><span class="line"></span><br><span class="line">cloud_init_modules:</span><br><span class="line"> - disk_setup</span><br><span class="line"> - migrator</span><br><span class="line"> - bootcmd</span><br><span class="line"> - write-files</span><br><span class="line"> - growpart</span><br><span class="line"> - resizefs</span><br><span class="line"># - set_hostname</span><br><span class="line"># - update_hostname</span><br><span class="line"># - update_etc_hosts</span><br><span class="line"> - rsyslog</span><br><span class="line"> - users-groups</span><br><span class="line"> - ssh</span><br><span class="line"></span><br><span class="line">cloud_config_modules:</span><br><span class="line"> - mounts</span><br><span class="line"> - locale</span><br><span class="line"> - set-passwords</span><br><span class="line"> - rh_subscription</span><br><span class="line"> - yum-add-repo</span><br><span class="line"> - package-update-upgrade-install</span><br><span class="line"> - timezone</span><br><span class="line"> - puppet</span><br><span class="line"> - chef</span><br><span class="line"> - salt-minion</span><br><span class="line"> - mcollective</span><br><span class="line"> - disable-ec2-metadata</span><br><span class="line"> - runcmd</span><br><span class="line"></span><br><span class="line">cloud_final_modules:</span><br><span class="line"> - rightscale_userdata</span><br><span class="line"> - scripts-per-once</span><br><span class="line"> - scripts-per-boot</span><br><span class="line"> - scripts-per-instance</span><br><span class="line"> - scripts-user</span><br><span class="line"> - ssh-authkey-fingerprints</span><br><span class="line"> - keys-to-console</span><br><span class="line"> - phone-home</span><br><span class="line"> - final-message</span><br><span class="line"> - power-state-change</span><br><span class="line"></span><br><span class="line">system_info:</span><br><span class="line">  default_user:</span><br><span class="line">    name: centos</span><br><span class="line">    lock_passwd: False</span><br><span class="line">    gecos: Cloud User</span><br><span class="line">    groups: [wheel, adm, systemd-journal]</span><br><span class="line">    passwd: $1$eloancn$fLB5JbxJp0QPEb0iWRXPv1</span><br><span class="line">    sudo: [&quot;ALL&#x3D;(ALL) NOPASSWD:ALL&quot;]</span><br><span class="line">    shell: &#x2F;bin&#x2F;bash</span><br><span class="line">  distro: rhel</span><br><span class="line">  paths:</span><br><span class="line">    cloud_dir: &#x2F;var&#x2F;lib&#x2F;cloud</span><br><span class="line">    templates_dir: &#x2F;etc&#x2F;cloud&#x2F;templates</span><br><span class="line">  ssh_svcname: sshd</span><br><span class="line">runcmd:</span><br><span class="line"> - [ bash, &#x2F;usr&#x2F;local&#x2F;src&#x2F;extend_root_fs.sh ]</span><br><span class="line"></span><br><span class="line"># vim:syntax&#x3D;yaml</span><br><span class="line">eof</span><br></pre></td></tr></table></figure>
+
+
+<p>增加centos用户用于登录系统,默认密码是eloancn@123,使用如下命令可以获得加密的密码</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">openssl passwd -1 eloancn@123</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>服务器关机并上传模板到镜像服务器</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">glance image-create --name CENTOS_7.6_X86_64 --visibility public --min-disk 20 --property os_type&#x3D;linux --container-format bare --disk-format qcow2 --file &#x2F;usr&#x2F;local&#x2F;src&#x2F;CENTOS_7.6_S_64_X_20_X.qcow2 --progress</span><br></pre></td></tr></table></figure>
+
+
+
+
+</li>
+</ol>
 ]]></content>
   </entry>
 </search>
