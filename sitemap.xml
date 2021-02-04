@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://emg-sys.github.io/2021/02/04/Docker%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/</loc>
+    
+    <lastmod>2021-02-04</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://emg-sys.github.io/2021/02/03/Docker%E6%90%AD%E5%BB%BAsvn%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
     
-    <lastmod>2021-02-03</lastmod>
+    <lastmod>2021-02-04</lastmod>
     
   </url>
   
@@ -109,31 +116,45 @@
 
   <url>
     <loc>http://emg-sys.github.io/</loc>
-    <lastmod>2021-02-03</lastmod>
+    <lastmod>2021-02-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
   
+  <url>
+    <loc>http://emg-sys.github.io/tags/git/</loc>
+    <lastmod>2021-02-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
 
   
   <url>
     <loc>http://emg-sys.github.io/categories/openstack/</loc>
-    <lastmod>2021-02-03</lastmod>
+    <lastmod>2021-02-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://emg-sys.github.io/categories/ftp/</loc>
-    <lastmod>2021-02-03</lastmod>
+    <lastmod>2021-02-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://emg-sys.github.io/categories/svn/</loc>
-    <lastmod>2021-02-03</lastmod>
+    <lastmod>2021-02-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://emg-sys.github.io/categories/gitlab/</loc>
+    <lastmod>2021-02-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>

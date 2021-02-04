@@ -27,19 +27,25 @@
     var CONFIG = {"hostname":"emg-sys.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="前言docker 安装ftp服务，大大节省了部署时间">
+  <meta name="description" content="前言公司内部存在svn、gitlab 两种版本控制系统，为了维护方便故采用docker 容器部署方式，服务器IP192.168.0.60，docker环境部署不再本章描述。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Docker搭建FTP服务器">
-<meta property="og:url" content="http://emg-sys.github.io/2021/02/02/Docker%E6%90%AD%E5%BB%BAFTP%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
+<meta property="og:title" content="Docker搭建gitlab服务">
+<meta property="og:url" content="http://emg-sys.github.io/2021/02/04/Docker%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/index.html">
 <meta property="og:site_name" content="流星雨的博客">
-<meta property="og:description" content="前言docker 安装ftp服务，大大节省了部署时间">
+<meta property="og:description" content="前言公司内部存在svn、gitlab 两种版本控制系统，为了维护方便故采用docker 容器部署方式，服务器IP192.168.0.60，docker环境部署不再本章描述。">
 <meta property="og:locale">
-<meta property="article:published_time" content="2021-02-02T07:35:53.000Z">
-<meta property="article:modified_time" content="2021-02-03T01:41:27.387Z">
+<meta property="og:image" content="http://emg-sys.github.io/images/Docker%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/image-20210204101504636.png">
+<meta property="og:image" content="http://emg-sys.github.io/images/Docker%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/image-20210204103157728.png">
+<meta property="og:image" content="http://emg-sys.github.io/images/Docker%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/image-20210204104603021.png">
+<meta property="og:image" content="http://emg-sys.github.io/images/Docker%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/image-20210204104815756.png">
+<meta property="article:published_time" content="2021-02-04T02:04:30.000Z">
+<meta property="article:modified_time" content="2021-02-04T02:55:46.163Z">
 <meta property="article:author" content="James">
+<meta property="article:tag" content="git">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://emg-sys.github.io/images/Docker%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/image-20210204101504636.png">
 
-<link rel="canonical" href="http://emg-sys.github.io/2021/02/02/Docker%E6%90%AD%E5%BB%BAFTP%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+<link rel="canonical" href="http://emg-sys.github.io/2021/02/04/Docker%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/">
 
 
 <script id="page-configurations">
@@ -52,7 +58,7 @@
   };
 </script>
 
-  <title>Docker搭建FTP服务器 | 流星雨的博客</title>
+  <title>Docker搭建gitlab服务 | 流星雨的博客</title>
   
 
 
@@ -209,7 +215,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://emg-sys.github.io/2021/02/02/Docker%E6%90%AD%E5%BB%BAFTP%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+    <link itemprop="mainEntityOfPage" href="http://emg-sys.github.io/2021/02/04/Docker%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -222,7 +228,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Docker搭建FTP服务器
+          Docker搭建gitlab服务
         </h1>
 
         <div class="post-meta">
@@ -231,23 +237,17 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2021-02-02 15:35:53" itemprop="dateCreated datePublished" datetime="2021-02-02T15:35:53+08:00">2021-02-02</time>
+              <time title="创建时间：2021-02-04 10:04:30 / 修改时间：10:55:46" itemprop="dateCreated datePublished" datetime="2021-02-04T10:04:30+08:00">2021-02-04</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-02-03 09:41:27" itemprop="dateModified" datetime="2021-02-03T09:41:27+08:00">2021-02-03</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/ftp/" itemprop="url" rel="index"><span itemprop="name">ftp</span></a>
+                  <a href="/categories/gitlab/" itemprop="url" rel="index"><span itemprop="name">gitlab</span></a>
                 </span>
             </span>
 
@@ -264,14 +264,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.2k</span>
+              <span>2.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>3 分钟</span>
             </span>
 
         </div>
@@ -283,28 +283,92 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>docker 安装ftp服务，大大节省了部署时间</p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>公司内部存在svn、gitlab 两种版本控制系统，为了维护方便故采用docker 容器部署方式，服务器IP192.168.0.60，docker环境部署不再本章描述。</p>
 <a id="more"></a>
 
-
-
-<ol>
-<li><p>寻找vsftpd的镜像 ，找到星星最多的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search vsftpd</span><br></pre></td></tr></table></figure></li>
-<li><p>拉取镜像</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull fauria&#x2F;vsftpd</span><br></pre></td></tr></table></figure></li>
-<li><p>查看本地镜像</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure></li>
-<li><p>运行容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d  -p 21:21 -p 20:20 -p 21100-21110:21100-21110 -v &#x2F;Data&#x2F;Ftpfile:&#x2F;home&#x2F;vsftpd  -e FTP_USER&#x3D;ftp_user1 -e FTP_PASS&#x3D;D#5O2fr6JfK1 -e REVERSE_LOOKUP_ENABLE&#x3D;NO -e PASV_ADDRESS&#x3D;172.30.95.101 -e PASV_MIN_PORT&#x3D;21100 -e PASV_MAX_PORT&#x3D;21110 --name ftpserver --restart&#x3D;always fauria&#x2F;vsftpd </span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#-p 进行端口绑定映射</span><br><span class="line">#-v 添加容器数据卷</span><br><span class="line">#-e FTP_USER&#x3D;moti -e FTP_PASS&#x3D;moti 添加一个初始化用户moti</span><br><span class="line">#PASV_MIN_PORT和PASV_MAX_PORT映射的是被动模式下端口使用范围</span><br><span class="line">#-name vsftpd 为容器命名为vsftpd </span><br><span class="line">#--restart&#x3D;always fauria&#x2F;vsftpd docker重启的时候自动启动这个容器</span><br></pre></td></tr></table></figure></li>
-<li><p>完善ftp配置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># 我们先进入container里面 </span><br><span class="line">docker exec -i -t vsftpd bash </span><br><span class="line"></span><br><span class="line"># 修改并生成虚拟用户模式下的用户db文件，向文件中最后两行写入用户名和密码</span><br><span class="line">vi &#x2F;etc&#x2F;vsftpd&#x2F;virtual_users.txt</span><br><span class="line"></span><br><span class="line">#假如我们添加了molihub用户，我们需要建立对应用户的文件夹</span><br><span class="line">mkdir &#x2F;home&#x2F;vsftpd&#x2F;molihub</span><br><span class="line"></span><br><span class="line">#把登录的验证信息写入数据库 </span><br><span class="line">&#x2F;usr&#x2F;bin&#x2F;db_load -T -t hash -f &#x2F;etc&#x2F;vsftpd&#x2F;virtual_users.txt &#x2F;etc&#x2F;vsftpd&#x2F;virtual_users.db</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>注意： 执行docker restart ftpserver 会把vsftpd.conf内容重新追加一份到/etc/vsftpd/vsftpd.conf。通过工具上传文件，浏览器访问<a href="ftp://x.x.x.x/">ftp://x.x.x.x</a> 出现中文乱码，此时需要修改工具的字符集关闭UTF-8即可</p>
+<h1 id="下载镜像"><a href="#下载镜像" class="headerlink" title="下载镜像"></a>下载镜像</h1><ol>
+<li><p>下载stars 最多的镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search gitlab-ce-zh</span><br></pre></td></tr></table></figure>
+<p><img src="/images/Docker%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/image-20210204101504636.png" alt="image-20210204101504636"></p>
+</li>
+<li><p>下载镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull twang2218&#x2F;gitlab-ce-zh</span><br></pre></td></tr></table></figure></li>
+<li><p>运行 Gitlab 容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker run --detach      \</span><br><span class="line">--hostname gitlab.eloancn.com  \</span><br><span class="line">--publish 443:443        \</span><br><span class="line">--publish 80:80 --publish 10022:22  \</span><br><span class="line">-e &#39;GITLAB_SSH_PORT&#x3D;10022&#39;            \</span><br><span class="line">--name gitlab            \</span><br><span class="line">--restart always             \</span><br><span class="line">--volume &#x2F;Data&#x2F;gitlab&#x2F;backup:&#x2F;var&#x2F;opt&#x2F;gitlab&#x2F;backups  \</span><br><span class="line">--volume &#x2F;Data&#x2F;gitlab&#x2F;config:&#x2F;etc&#x2F;gitlab           \</span><br><span class="line">--volume &#x2F;Data&#x2F;gitlab&#x2F;logs:&#x2F;var&#x2F;log&#x2F;gitlab          \</span><br><span class="line">--volume &#x2F;Data&#x2F;gitlab&#x2F;datas:&#x2F;var&#x2F;opt&#x2F;gitlab twang2218&#x2F;gitlab-ce-zh</span><br></pre></td></tr></table></figure></li>
+<li><p>修改配置</p>
+<p>进入gitlab的配置目录，修改对应的配置（根据容器的启动命令修改对应的端口号，如果是80端口则不需要修改）</p>
+<p>cd /Data/gitlab/config,vim gitlab.rb</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vim gitlab.rb 修改如下几项</span><br><span class="line"></span><br><span class="line">external_url &#39;http:&#x2F;&#x2F;192.168.0.60&#39;</span><br><span class="line">nginx[&#39;listen_port&#39;] &#x3D; 80 ## 容器内的端口，配置后会将宿主机的88跳转到容器的80</span><br><span class="line">gitlab_rails[&#39;gitlab_ssh_host&#39;] &#x3D; &#39;192.168.0.60&#39;</span><br><span class="line">gitlab_rails[&#39;gitlab_shell_ssh_port&#39;] &#x3D; 10022</span><br></pre></td></tr></table></figure></li>
+<li><p>测试</p>
+<p><a target="_blank" rel="noopener" href="http://192.168.0.60/">http://192.168.0.60</a></p>
+<p><img src="/images/Docker%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/image-20210204103157728.png" alt="image-20210204103157728"></p>
 </li>
 </ol>
-<p>参考文档:</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/fauria/docker-vsftpd/blob/master/run-vsftpd.sh">https://github.com/fauria/docker-vsftpd/blob/master/run-vsftpd.sh</a></p>
+<h1 id="配置邮件"><a href="#配置邮件" class="headerlink" title="配置邮件"></a>配置邮件</h1><ol>
+<li><p>修改配置文件</p>
+<p>vim gitlab.rb  修改为如下配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">gitlab_rails[&#39;gitlab_email_enabled&#39;] &#x3D; true</span><br><span class="line">gitlab_rails[&#39;gitlab_email_from&#39;] &#x3D; &#39;xxx@eloancn.com&#39;</span><br><span class="line">gitlab_rails[&#39;gitlab_email_display_name&#39;] &#x3D; &#39;Gitlab&#39;</span><br><span class="line">gitlab_rails[&#39;gitlab_shell_ssh_port&#39;] &#x3D; 10022</span><br><span class="line">gitlab_rails[&#39;smtp_enable&#39;] &#x3D; true</span><br><span class="line">gitlab_rails[&#39;smtp_address&#39;] &#x3D; &quot;smtp.qiye.163.com&quot;</span><br><span class="line">gitlab_rails[&#39;smtp_port&#39;] &#x3D; 465</span><br><span class="line">gitlab_rails[&#39;smtp_user_name&#39;] &#x3D; &quot;xxxx@eloancn.com&quot;</span><br><span class="line">gitlab_rails[&#39;smtp_password&#39;] &#x3D; &quot;XXXXXXXXXXXX&quot;   #邮件服务器客户端授权码，不是邮箱密码</span><br><span class="line">gitlab_rails[&#39;smtp_domain&#39;] &#x3D; &quot;163.com&quot;</span><br><span class="line">gitlab_rails[&#39;smtp_authentication&#39;] &#x3D; &quot;login&quot;</span><br><span class="line">gitlab_rails[&#39;smtp_enable_starttls_auto&#39;] &#x3D; true</span><br><span class="line">gitlab_rails[&#39;smtp_tls&#39;] &#x3D; true</span><br></pre></td></tr></table></figure></li>
+<li><p>重新配置gitlab</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it gitlab &#x2F;bin&#x2F;bash</span><br><span class="line"></span><br><span class="line">gitlab-ctl reconfigure</span><br></pre></td></tr></table></figure></li>
+<li><p>测试发送邮件</p>
+<p>执行命令<code>gitlab-ctl console</code>测试发邮件，进入控制台之后执行命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it gitlab &#x2F;bin&#x2F;bash</span><br><span class="line">gitlab-rails console</span><br><span class="line"> Notify.test_email(&#39;你的收件邮箱&#39;, &#39;测试邮件标题&#39;, &#39;测试邮件正文&#39;).deliver_now</span><br></pre></td></tr></table></figure>
+<h1 id="数据备份"><a href="#数据备份" class="headerlink" title="数据备份"></a>数据备份</h1></li>
+<li><p>进入容器安装定时任务</p>
+<p>配置镜像没有安装定时任务，需要自己重新安装然后封装为新镜像，数据无价，多做备份，谨慎操作！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it gitlab &#x2F;bin&#x2F;bash</span><br><span class="line"></span><br><span class="line">apt-get update</span><br><span class="line">apt-get install cron</span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>创建备份</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-rake gitlab:backup:create</span><br></pre></td></tr></table></figure></li>
+<li><p>查看定时任务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -l</span><br></pre></td></tr></table></figure>
+<p><img src="/images/Docker%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/image-20210204104603021.png" alt="image-20210204104603021"></p>
+</li>
+<li><p>查看备份文件</p>
+<p><img src="/images/Docker%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/image-20210204104815756.png" alt="image-20210204104815756"></p>
+</li>
+<li><p>异地备份</p>
+<p>上面已经将数据文件备份到本地目录，现在要拷贝到远程主机，远程主机自己配置ssh互信,通过定时任务rsync到目的主机</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">59 2 * * * rsync -avz &#x2F;Data&#x2F;gitlab&#x2F;backup&#x2F; 192.168.2.60:&#x2F;home&#x2F;nova&#x2F;small-loan-gitlab-backup&#x2F; &gt; &#x2F;dev&#x2F;null 2&gt;&amp;1 </span><br></pre></td></tr></table></figure>
+<h1 id="数据恢复"><a href="#数据恢复" class="headerlink" title="数据恢复"></a>数据恢复</h1></li>
+<li><p>环境准备</p>
+<p>本节说明如何在另一台主机上恢复数据。将备份文件拷贝到<code>/var/opt/gitlab/backups</code>下，恢复主机自行安装gitlab 服务，目标gitlab 执行如下操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gitlab-ctl stop unicorn</span><br><span class="line">gitlab-ctl stop sidekiq</span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>从指定备份恢复</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-rake gitlab:backup:restore BACKUP&#x3D;1605078596</span><br></pre></td></tr></table></figure></li>
+<li><p>启动gitlab</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gitlab-ctl start</span><br><span class="line">gitlab-ctl reconfigure</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</li>
+</ol>
 
     </div>
 
@@ -320,7 +384,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://emg-sys.github.io/2021/02/02/Docker%E6%90%AD%E5%BB%BAFTP%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="Docker搭建FTP服务器">http://emg-sys.github.io/2021/02/02/Docker搭建FTP服务器/</a>
+    <a href="http://emg-sys.github.io/2021/02/04/Docker%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/" title="Docker搭建gitlab服务">http://emg-sys.github.io/2021/02/04/Docker搭建gitlab服务/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -330,6 +394,10 @@
 
 
       <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/git/" rel="tag"><i class="fa fa-tag"></i> git</a>
+          </div>
 
         
 
@@ -337,13 +405,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/02/01/OpenStack-Train%E5%88%B6%E4%BD%9C%E9%95%9C%E5%83%8F%E6%A8%A1%E6%9D%BF-%E5%8D%81/" rel="prev" title="OpenStack-Train制作镜像模板-(十)">
-      <i class="fa fa-chevron-left"></i> OpenStack-Train制作镜像模板-(十)
+    <a href="/2021/02/03/Docker%E6%90%AD%E5%BB%BAsvn%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="prev" title="Docker搭建svn服务器">
+      <i class="fa fa-chevron-left"></i> Docker搭建svn服务器
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/02/03/Docker%E6%90%AD%E5%BB%BAsvn%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="next" title="Docker搭建svn服务器">
-      Docker搭建svn服务器 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -402,7 +467,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E9%95%9C%E5%83%8F"><span class="nav-number">2.</span> <span class="nav-text">下载镜像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E9%82%AE%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">配置邮件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD"><span class="nav-number">4.</span> <span class="nav-text">数据备份</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D"><span class="nav-number">5.</span> <span class="nav-text">数据恢复</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
