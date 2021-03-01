@@ -783,4 +783,69 @@
         <tag>git</tag>
       </tags>
   </entry>
+  <entry>
+    <title>企业级dns部署</title>
+    <url>/2021/02/04/%E4%BC%81%E4%B8%9A%E7%BA%A7dns%E9%83%A8%E7%BD%B2/</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>企业内部大部分应用配置文件都采用ip地址或者配置本地host连接，不便于应用配置变更。本章将描述如何部署dns和namedmanager管理控制台。</p>
+<a id="more"></a>
+
+<h1 id="环境信息"><a href="#环境信息" class="headerlink" title="环境信息"></a>环境信息</h1><ol>
+<li><p>服务器规划</p>
+<table>
+<thead>
+<tr>
+<th>IP</th>
+<th>VIP</th>
+<th>主机名称</th>
+<th>配置信息</th>
+<th>软件</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>192.168.1.58</td>
+<td></td>
+<td>dns-master.host.com</td>
+<td>4C8G200G</td>
+<td>bind9、keepalived</td>
+<td>dns主</td>
+</tr>
+<tr>
+<td>192.168.1.59</td>
+<td>192.168.1.99</td>
+<td>dns-slave.host.com</td>
+<td>4C8G200G</td>
+<td>bind9、keepalived</td>
+<td>dns从</td>
+</tr>
+<tr>
+<td>192.168.1.70</td>
+<td></td>
+<td>mysqldb.host.com</td>
+<td>4C8G200G</td>
+<td>namedmanager、mariadb</td>
+<td>单点</td>
+</tr>
+</tbody></table>
+<p>namedmanager管理控制台出问题并不会影响dns解析故采用单点模式</p>
+</li>
+<li><p>配置主机名称</p>
+<p>分别在各自主机上执行如下命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hostnamectl set-hostname  dns-master.host.com</span><br><span class="line">hostnamectl set-hostname  dns-slave.host.com</span><br><span class="line">hostnamectl set-hostname  mysqldb.host.com</span><br></pre></td></tr></table></figure>
+<h1 id="安装bind"><a href="#安装bind" class="headerlink" title="安装bind"></a>安装bind</h1></li>
+<li><p>主从服务器安装bind9 软件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum -y install bind</span><br></pre></td></tr></table></figure></li>
+<li><p>主修改配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt;&#x2F;etc&#x2F;named.conf&lt;&lt;eof</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">&#x2F;&#x2F; named.conf</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">&#x2F;&#x2F; Provided by Red Hat bind package to configure the ISC BIND named(8) DNS</span><br><span class="line">&#x2F;&#x2F; server as a caching only nameserver (as a localhost DNS resolver only).</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">&#x2F;&#x2F; See &#x2F;usr&#x2F;share&#x2F;doc&#x2F;bind*&#x2F;sample&#x2F; for example named configuration files.</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">&#x2F;&#x2F; See the BIND Administrator&#39;s Reference Manual (ARM) for details about the</span><br><span class="line">&#x2F;&#x2F; configuration located in &#x2F;usr&#x2F;share&#x2F;doc&#x2F;bind-&#123;version&#125;&#x2F;Bv9ARM.html</span><br><span class="line"></span><br><span class="line">options &#123;</span><br><span class="line">        listen-on port 53 &#123; 192.168.1.58; &#125;;</span><br><span class="line">        directory       &quot;&#x2F;var&#x2F;named&quot;;</span><br><span class="line">        dump-file       &quot;&#x2F;var&#x2F;named&#x2F;data&#x2F;cache_dump.db&quot;;</span><br><span class="line">        statistics-file &quot;&#x2F;var&#x2F;named&#x2F;data&#x2F;named_stats.txt&quot;;</span><br><span class="line">        memstatistics-file &quot;&#x2F;var&#x2F;named&#x2F;data&#x2F;named_mem_stats.txt&quot;;</span><br><span class="line">        recursing-file  &quot;&#x2F;var&#x2F;named&#x2F;data&#x2F;named.recursing&quot;;</span><br><span class="line">        secroots-file   &quot;&#x2F;var&#x2F;named&#x2F;data&#x2F;named.secroots&quot;;</span><br><span class="line">        allow-query     &#123; any; &#125;;</span><br><span class="line"></span><br><span class="line">        &#x2F;* </span><br><span class="line">         - If you are building an AUTHORITATIVE DNS server, do NOT enable recursion.</span><br><span class="line">         - If you are building a RECURSIVE (caching) DNS server, you need to enable </span><br><span class="line">           recursion. </span><br><span class="line">         - If your recursive DNS server has a public IP address, you MUST enable access </span><br><span class="line">           control to limit queries to your legitimate users. Failing to do so will</span><br><span class="line">           cause your server to become part of large scale DNS amplification </span><br><span class="line">           attacks. Implementing BCP38 within your network would greatly</span><br><span class="line">           reduce such attack surface </span><br><span class="line">        *&#x2F;</span><br><span class="line">        recursion yes;</span><br><span class="line"></span><br><span class="line">        dnssec-enable yes;</span><br><span class="line">        dnssec-validation yes;</span><br><span class="line"></span><br><span class="line">        &#x2F;* Path to ISC DLV key *&#x2F;</span><br><span class="line">        bindkeys-file &quot;&#x2F;etc&#x2F;named.root.key&quot;;</span><br><span class="line"></span><br><span class="line">        managed-keys-directory &quot;&#x2F;var&#x2F;named&#x2F;dynamic&quot;;</span><br><span class="line"></span><br><span class="line">        pid-file &quot;&#x2F;run&#x2F;named&#x2F;named.pid&quot;;</span><br><span class="line">        session-keyfile &quot;&#x2F;run&#x2F;named&#x2F;session.key&quot;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">logging &#123;</span><br><span class="line">        channel default_debug &#123;</span><br><span class="line">                file &quot;data&#x2F;named.run&quot;;</span><br><span class="line">                severity dynamic;</span><br><span class="line">        &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">zone &quot;.&quot; IN &#123;</span><br><span class="line">        type hint;</span><br><span class="line">        file &quot;named.ca&quot;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">include &quot;&#x2F;etc&#x2F;named.rfc1912.zones&quot;;</span><br><span class="line">include &quot;&#x2F;etc&#x2F;named.root.key&quot;;</span><br><span class="line">eof</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>dns</category>
+      </categories>
+  </entry>
 </search>
